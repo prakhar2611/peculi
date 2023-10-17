@@ -1,0 +1,27 @@
+.cardmain {
+    display:  flex;
+    height : 20rem;
+    width : 15rem;
+    justify-content : center;
+    align-items :center;
+    
+}
+
+.flexpage {
+    justify-content: space-around;
+    height: 50rem;
+    align-items: center;
+    background-color: rgb(179, 179, 179);
+    flex-wrap: wrap;
+    background: url(https://images.unsplash.com/photo-1479030160180-b1860951d696?&auto=format&fit=crop&w=1200&q=80);
+    filter :grayscale(30%);
+    z-index: 0;
+}
+
+.left {
+    display:  flex;
+    flex-direction: column;
+    height: 18.5rem;
+    justify-content : space-evenly;
+    align-items :flex-start;
+}

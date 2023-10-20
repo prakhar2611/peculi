@@ -1,6 +1,6 @@
 "use client"
 
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined,SlidersFilled,PieChartFilled, VideoCameraOutlined,DiffFilled } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import React from 'react';
 
@@ -8,6 +8,14 @@ import { useRouter } from 'next/navigation'
 
 
 const { Header, Content, Footer, Sider } = Layout;
+
+const navBarItems = {
+  'Home' : PieChartFilled ,
+  'VPA' : SlidersFilled,
+  'Pockets': DiffFilled ,
+}
+
+const menu = ["HOME","VPA","POCKETS"]
 
 export default function Dashboard({children}) {
 
@@ -19,10 +27,10 @@ export default function Dashboard({children}) {
       
       function handleSiderNav(index) {
         console.log("nav bar index:",index.key)
-        if(index.key == '2')
+        if(index.key == '3')
             router.push('/dashboard/configure')
-        else if(index.key == '1')
-            router.push('/dashboard')
+        else if(index.key == '2')
+            router.push('/dashboard/vpa')
     }
     
 
@@ -42,12 +50,22 @@ export default function Dashboard({children}) {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['4']}
-          items={[UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map(
+          defaultSelectedKeys={['1']}
+
+          // items={Object.keys(navBarItems).forEach((key,index)=>(
+          //   {
+          //     key: String(index + 1),
+          //     icon: React.createElement(navBarItems[key]),
+          //     label: key,
+          //     onClick :((e)=> handleSiderNav(e))
+          //   }
+          // ))}
+          
+          items={[PieChartFilled, SlidersFilled, DiffFilled].map(
             (icon, index) => ({
               key: String(index + 1),
               icon: React.createElement(icon),
-              label: `nav ${index + 1}`,
+              label: menu[index],
               onClick :((e)=> handleSiderNav(e))
             }),
           )}

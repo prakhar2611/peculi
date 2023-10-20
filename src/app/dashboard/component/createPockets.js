@@ -1,57 +1,163 @@
-"use client"
-import { CloseCircleFilled, CloseCircleOutlined, PlusCircleFilled } from "@ant-design/icons"
-import { Button, Card, Input } from "antd"
-import { useState } from "react"
-
+"use client";
+import {
+  CloseCircleFilled,
+  CloseCircleOutlined,
+  PlusCircleFilled,
+} from "@ant-design/icons";
+import { Button, Card, Input, Select } from "antd";
+import { useState } from "react";
 
 export default function CreatePockets() {
-    const [pockets,setpockets] = useState(["HOUSEHOLD", "MONTHLY", "SWIGGY" ])
-    const [isnewPocket,setisnewPocket] = useState(false)
+  //fetch from the data base and fed it to the states
+  //pocketsNew = {
+  //     name : "FOOD",
+  //     lables : ["SWIGGY","DUNZO"]
+  //   }
 
+  //labels = distinct labels
+  const [pocketsNew, setNewPockets] = useState([]);
 
-    function deleteItem(data){
-        var f = pockets 
-        const newArray = f.filter(item => item !== data)
-                setpockets(newArray)
-    }
+  const [labels] = useState([
+    {
+      label: "SWIGGY",
+      value: "SWIGGY",
+    },
+    {
+      label: "ANUBHAV",
+      value: "ANUBHAV",
+    },
+    {
+      label: "ZERODHA",
+      value: "ZERODHA",
+    },
+  ]);
 
+  const [isnewPocket, setisnewPocket] = useState(false);
 
+  //#region Componet Internal Methods
+  function deleteItem(data) {
+    var f = pocketsNew;
+    const newArray = f.filter((item) => item.name !== data);
+    setNewPockets(newArray);
+  }
+  function createpocketcomponet(pockettitle) {
+    var f = pocketsNew;
+    // const n = Pocket(pockettitle)
+    const n = {
+      name: pockettitle,
+      label: [],
+    };
 
-    function PocketswithEdit({data}) {
-        const [pockettitle,setpockettitle] = useState("")
+    f.push(n);
 
-        function createNewPocket() {
-            var f = pockets 
-            f.push(pockettitle)
-            setisnewPocket(false)
-            setpockets(f)
-        }
+    setNewPockets(f);
+    setisnewPocket(false);
+    // console.log("on create new pocket : ", pocketsNew)
+  }
+  function handleChange(v, item) {
+    var f = pocketsNew;
+    // console.log("coming value",v)
+    f.map((value, index) => {
+      if (value.name == item) {
+        value.label = v;
+      }
+    });
 
-        return(
-            <div className="grid grid-cols-2 p-2 gap-2 justify-items-center ">
-            {data.map((item,index)=> (
-                <div className={`flex gap-1`}>
-                    <Card className={``}> {item} </Card>
-                <CloseCircleOutlined className="self-start" onClick={() =>{deleteItem(item)}} />
+    setNewPockets(f);
+    // console.log("on multi select pockets : ", pocketsNew)
+  }
+  //#endregion
 
-                </div>
-            ))}
-            {!isnewPocket && <PlusCircleFilled className="p-5" onClick={() => setisnewPocket(true)}/>}
+  //#region Internal Componets
+  //smallest unit of the componet with name and multi select
+  //string struct in state and using array to create multiple pocket componet
+  function Pocket({ item, defaultvalue }) {
+    return (
+      <>
+        <Card className={`flex h-10 items-center`}> {item} </Card>
 
-            <div className="flex flex-col gap-2">
-            {isnewPocket && <CloseCircleFilled className="self-end" onClick={() =>setisnewPocket(false)} />}
-            {isnewPocket && <Input className={`max-w-[15ch]`} onChange={(e)=>{setpockettitle(e.target.value)}} placeholder={"Enter Pocket Name"}/>}
-            {isnewPocket && <Button className={`max-w-[15ch]`} onClick={()=> createNewPocket()}>save</Button>}  
+        <Select
+          className={`w-32`}
+          mode="multiple"
+          allowClear
+          placeholder="Please select"
+          onChange={(v) => handleChange(v, item)}
+          defaultValue={defaultvalue}
+          options={labels}
+        />
+      </>
+    );
+  }
 
-                </div>
-            </div>
-        )
-    } 
+  //Pocket board consist of array of structed pocket with help of pocket componet
+  //dynamically creating on the client end
+  function PocketBoard() {
+    return (
+      <div className="grid grid-row-2 p-2 gap-2 place-content-center ">
+        {pocketsNew.map((item, index) => (
+          <div
+            className={`flex gap-1 w-auto justify-around place-content-center`}
+          >
+            <Pocket item={item.name} defaultvalue={item.label} />
+            <CloseCircleOutlined
+              className="self-start"
+              onClick={() => {
+                deleteItem(item.name);
+              }}
+            />
+          </div>
+        ))}
+        {!isnewPocket && (
+          <PlusCircleFilled onClick={() => setisnewPocket(true)} />
+        )}
+      </div>
+    );
+  }
 
-    return(
-        <div className="flex flex-col gap-2">
-            <PocketswithEdit className="flex justify-item-center" data={pockets}/>
-           
-        </div>
-    )
+  //+ feature with new name input and push button
+  function AddNewPocket() {
+    const [pockettitle, setpockettitle] = useState("");
+
+    return (
+      <div className="flex flex-col gap-2">
+        {isnewPocket && (
+          <CloseCircleFilled
+            className="self-end"
+            onClick={() => setisnewPocket(false)}
+          />
+        )}
+        {isnewPocket && (
+          <Input
+            className={`max-w-[15ch]`}
+            onChange={(e) => {
+              setpockettitle(e.target.value);
+            }}
+            placeholder={"Enter Pocket Name"}
+          />
+        )}
+        {isnewPocket && (
+          <Button
+            className={`max-w-[15ch]`}
+            onClick={() => createpocketcomponet(pockettitle)}
+          >
+            push
+          </Button>
+        )}
+      </div>
+    );
+  }
+  //#endregion
+
+  return (
+    <div className="flex flex-col gap-2">
+      {/* - consist of all the pockets and cross with it  */}
+      <PocketBoard />
+      {/* - consist of + sign component  */}
+
+      <AddNewPocket />
+      {pocketsNew.length > 0 && (
+        <Button className={`max-w-[15ch] self-center`}>Save</Button>
+      )}
+    </div>
+  );
 }

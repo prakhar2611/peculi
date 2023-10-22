@@ -72,18 +72,18 @@
         const onInputChange = (key, index,value) => {
             var y = payload
 
-            // payload.get
-            if (index in y ) {
-                var i = y[index]
-                i[key] = value
-                y[index] = i 
-            }
-            else {
-                var o = {}
-                o[key] = value
-                y[index] = o
-            }
-
+            // // payload.get
+            // if (index in y ) {
+            //     var i = y[index]
+            //     i[key] = value
+            //     y[index] = i 
+            // }
+            // else {
+            //     var o = {}
+            //     o[key] = value
+            //     y[index] = o
+            // }
+            y[index] = value
             // y.push(d)
             setpayload(y)
             setdisable(false)
@@ -114,16 +114,16 @@
               dataIndex: 'vpa',
               key: 'vpa',
             },
-            {
-                title: 'totalAmount',
-                dataIndex: 'totalAmount',
-                key: 'totalAmount',
-              },
-            {
-              title: 'totalTxn',
-              dataIndex: 'totalTxn',
-              key: 'totalTxn',
-            },
+            // {
+            //     title: 'totalAmount',
+            //     dataIndex: 'totalAmount',
+            //     key: 'totalAmount',
+            //   },
+            // {
+            //   title: 'totalTxn',
+            //   dataIndex: 'totalTxn',
+            //   key: 'totalTxn',
+            // },
               // {
               //   title: 'Category',
               // dataIndex : 'category',
@@ -137,7 +137,7 @@
               dataIndex : 'label',
               key: 'label',
                 render: (text, record) => (
-                  <Input defaultValue={record.label} onChange={(e) => onInputChange("label", record.vpa,e.target.value)} />
+                  <Input  defaultValue={record.label} onChange={(e) => onInputChange("label", record.vpa,e.target.value)} />
                 )
               },
           ];
@@ -146,8 +146,8 @@
             return null
           }
           return (
-        <div>
-            <Table columns={columns} 
+        <div >
+            <Table className='flex place-content-evenly' columns={columns} 
             pagination ={false}
             dataSource={data} rowKey={record => record.key}/>
             <Button type="primary" disabled={disable} loading={loadings[0]} onClick={() => onConfirm(0)}>

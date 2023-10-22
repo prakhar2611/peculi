@@ -1,13 +1,20 @@
 "use client";
+import { FetchVPALabelPocketMap, UpdatePocketsMapping } from "@/app/api/FetchSyncWorker";
 import {
   CloseCircleFilled,
   CloseCircleOutlined,
   PlusCircleFilled,
 } from "@ant-design/icons";
-import { Button, Card, Input, Select } from "antd";
-import { useState } from "react";
+import { Button, Card, Input, Select,message } from "antd";
+import { useState, useEffect } from "react";
+
+
 
 export default function CreatePockets() {
+  const token = sessionStorage.getItem("access_token");
+  const [messageApi, contextHolder] = message.useMessage();
+
+
   //fetch from the data base and fed it to the states
   //pocketsNew = {
   //     name : "FOOD",
@@ -15,63 +22,100 @@ export default function CreatePockets() {
   //   }
 
   //labels = distinct labels
-  const [pocketsNew, setNewPockets] = useState([]);
 
-  const [labels] = useState([
-    {
-      label: "SWIGGY",
-      value: "SWIGGY",
-    },
-    {
-      label: "ANUBHAV",
-      value: "ANUBHAV",
-    },
-    {
-      label: "ZERODHA",
-      value: "ZERODHA",
-    },
-  ]);
-
+  const [pocketsNew_1, setNewPockets_1] = useState({});
+  console.log("real value of pocket state", pocketsNew_1);
+  const [labels, setlabels] = useState(new Set());
   const [isnewPocket, setisnewPocket] = useState(false);
 
-  //#region Componet Internal Methods
-  function deleteItem(data) {
-    var f = pocketsNew;
-    const newArray = f.filter((item) => item.name !== data);
-    setNewPockets(newArray);
-  }
-  function createpocketcomponet(pockettitle) {
-    var f = pocketsNew;
-    // const n = Pocket(pockettitle)
-    const n = {
-      name: pockettitle,
-      label: [],
-    };
-
-    f.push(n);
-
-    setNewPockets(f);
-    setisnewPocket(false);
-    // console.log("on create new pocket : ", pocketsNew)
-  }
-  function handleChange(v, item) {
-    var f = pocketsNew;
-    // console.log("coming value",v)
-    f.map((value, index) => {
-      if (value.name == item) {
-        value.label = v;
+  useEffect(() => {
+    FetchVPALabelPocketMap(token).then(
+      (apiresp) => {
+        Object.keys(apiresp).forEach((key) => {
+          if (key == "Pockets") {
+            setNewPockets_1(apiresp[key]);
+          } else if (key == "Labels") {
+            setlabels(apiresp[key]);
+          }
+        });
+      },
+      (err) => {
+        alert(err);
       }
-    });
+    );
+  }, []);
 
-    setNewPockets(f);
-    // console.log("on multi select pockets : ", pocketsNew)
+  const combined = new Set();
+  Object.keys(pocketsNew_1).forEach((key) => {
+    pocketsNew_1[key].forEach((element) => {
+      combined.add(element);
+    });
+  });
+  const differenceArray = Array.from(labels).filter(
+    (item) => !Array.from(combined).includes(item)
+  );
+  console.log("diff labels", differenceArray);
+
+
+
+  //#region Componet Internal Methods
+
+  function handleSave() {
+    UpdatePocketsMapping(pocketsNew_1,token).then((res) => {
+        setTimeout(messageApi.destroy, 1500);
+        console.log("reposne data " , res)
+      },(err) => {
+        alert(err)
+      })
+    
   }
+
+//   function getfilteredoption(item) {
+//     Object.entries(pocketsNew_1).map((data, index) => {
+//       const filteredArray = Array.from(data[1]).filter(
+//         (obj) => obj.name !== item
+//       );
+//     });
+//   }
+
+  function deleteItem(data) {
+    var f_1 = pocketsNew_1;
+    delete f_1[data];
+    console.log("deleting item", f_1);
+    setNewPockets_1({ ...f_1 });
+  }
+
+  function createpocketcomponet(pockettitle) {
+    var f_1 = pocketsNew_1;
+    f_1[pockettitle] = [];
+    setNewPockets_1(f_1);
+    setisnewPocket(false);
+    console.log("on create new pocket : ", pocketsNew_1);
+  }
+
+  function handleChange(v, item) {
+    var f_1 = pocketsNew_1;
+    Object.keys(f_1).forEach((key) => {
+      if (key == item) {
+        f_1[key] = new Set(v);
+      }
+    //   } else {
+    //     const filteredArray = f_1[key].filter(
+    //       (item) => !Array.from(v).includes(item)
+    //     );
+    //     f_1[key] = new Set(filteredArray);
+    //   }
+    });
+    setNewPockets_1({ ...f_1 });
+    console.log("on multi select pockets : ", pocketsNew_1);
+  }
+  
   //#endregion
 
   //#region Internal Componets
   //smallest unit of the componet with name and multi select
   //string struct in state and using array to create multiple pocket componet
-  function Pocket({ item, defaultvalue }) {
+  function Pocket({ item, defaultvalue, labels }) {
     return (
       <>
         <Card className={`flex h-10 items-center`}> {item} </Card>
@@ -82,8 +126,12 @@ export default function CreatePockets() {
           allowClear
           placeholder="Please select"
           onChange={(v) => handleChange(v, item)}
-          defaultValue={defaultvalue}
-          options={labels}
+          defaultValue={Array.from(defaultvalue)}
+          //  value={Array.from(defaultvalue)}
+          options={Array.from(labels).map((item) => ({
+            label: item,
+            value: item,
+          }))}
         />
       </>
     );
@@ -91,22 +139,28 @@ export default function CreatePockets() {
 
   //Pocket board consist of array of structed pocket with help of pocket componet
   //dynamically creating on the client end
-  function PocketBoard() {
+  function PocketBoard({ labels }) {
+    console.log("rerendering");
     return (
       <div className="grid grid-row-2 p-2 gap-2 place-content-center ">
-        {pocketsNew.map((item, index) => (
+        {Object.keys(pocketsNew_1).map((key) => (
           <div
             className={`flex gap-1 w-auto justify-around place-content-center`}
           >
-            <Pocket item={item.name} defaultvalue={item.label} />
+            <Pocket
+              item={key}
+              defaultvalue={pocketsNew_1[key]}
+              labels={labels}
+            />
             <CloseCircleOutlined
               className="self-start"
               onClick={() => {
-                deleteItem(item.name);
+                deleteItem(key);
               }}
             />
           </div>
         ))}
+
         {!isnewPocket && (
           <PlusCircleFilled onClick={() => setisnewPocket(true)} />
         )}
@@ -149,15 +203,18 @@ export default function CreatePockets() {
   //#endregion
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 min-h-max">
       {/* - consist of all the pockets and cross with it  */}
-      <PocketBoard />
+      <PocketBoard pockets={pocketsNew_1} labels={differenceArray} />
       {/* - consist of + sign component  */}
 
       <AddNewPocket />
-      {pocketsNew.length > 0 && (
-        <Button className={`max-w-[15ch] self-center`}>Save</Button>
-      )}
+      {!(differenceArray.length > 0) && (
+        <Button className={`max-w-[15ch] self-center`} onClick={handleSave}>
+          Save
+        </Button>
+      )
+      }
     </div>
   );
 }

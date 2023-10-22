@@ -34,7 +34,7 @@ export default function FetchByVPA (){
     setfetched(true)
     setlimit(+10)
     setoffset(+10)
-  } , [1])
+  } , [])
 
   
 

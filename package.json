@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
+    "@headlessui/react": "^1.7.17",
     "@radix-ui/themes": "^2.0.0",
     "@reduxjs/toolkit": "^1.9.7",
     "@tremor/react": "^3.9.2",

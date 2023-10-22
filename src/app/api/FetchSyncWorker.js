@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const serverurl = process.env.REACT_APP_SERVER_URL
+const serverurl = 'http://localhost:9005/'
 
 
 
@@ -70,4 +70,44 @@ export function FetchGroupedVPA(limit,offset,token){
         )
             .catch(error => console.error(error));
  
+}
+
+export function FetchVPALabelPocketMap(token){
+ 
+  console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getVpaLabelPocketMapping` )
+
+
+       return      axios.get(`http://localhost:9005/expense/api/v1/getVpaLabelPocketMapping`,{
+            headers: {           
+                'Content-Type': 'application/json',
+                'token' :  token
+            },        
+        })
+        .then(response => response.data
+        )
+            .catch(error => console.error(error));
+ 
+}
+
+
+export function UpdatePocketsMapping(p,token){
+  Object.keys(p).map((key) => {
+    p[key] = Array.from(p[key])
+  })
+
+  const payload = {
+    data : p
+  }
+  console.log("update payload :",JSON.stringify(payload));
+
+  return axios.post(serverurl+'expense/api/v1/UpdatePockets', JSON.stringify(payload),{
+      headers: {
+          'Content-Type': 'application/json',
+          'token' :  token
+       },
+  }).then(response => response.data)
+    .catch(error => {
+      console.error(error);
+      throw error;
+    });     
 }

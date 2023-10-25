@@ -118,7 +118,7 @@ export default function CreatePockets() {
   function Pocket({ item, defaultvalue, labels }) {
     return (
       <>
-        <Card className={`flex h-10 items-center`}> {item} </Card>
+        <p className={`flex min-w-[10ch] text-md font-sans shadow-sm rounded-md place-content-center`}> {item} </p>
 
         <Select
           className={`w-32`}
@@ -142,10 +142,10 @@ export default function CreatePockets() {
   function PocketBoard({ labels }) {
     console.log("rerendering");
     return (
-      <div className="grid grid-row-2 p-2 gap-2 place-content-center ">
+      <div className="grid grid-row-2 p-2 gap-2 place-items-stretch  ">
         {Object.keys(pocketsNew_1).map((key) => (
           <div
-            className={`flex gap-1 w-auto justify-around place-content-center`}
+            className={`flex gap-1 w-auto justify-around place-items-center`}
           >
             <Pocket
               item={key}
@@ -203,9 +203,10 @@ export default function CreatePockets() {
   //#endregion
 
   return (
-    <div className="flex flex-col gap-2 min-h-max">
+    <div className="flex relative flex-col gap-2 min-h-max">
+        {/* <div className=' absolute bg-slate-600 h-full blur-sm z-0'></div> */}
       {/* - consist of all the pockets and cross with it  */}
-      <PocketBoard pockets={pocketsNew_1} labels={differenceArray} />
+      <PocketBoard  pockets={pocketsNew_1} labels={differenceArray} />
       {/* - consist of + sign component  */}
 
       <AddNewPocket />

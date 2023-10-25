@@ -9,7 +9,25 @@ import CreatePockets from "../component/createPockets";
 import FetchByVPA from "../component/fetchtopvpa";
 import Pockets from "../component/pockets";
 import { useState } from "react";
+import { SyncWorker } from "@/app/api/FetchSyncWorker";
 
+
+function sync() {
+  SyncWorker(token).then(
+    (apiresp) => {
+      Object.keys(apiresp).forEach((key) => {
+        if (key == "Pockets") {
+          setNewPockets_1(apiresp[key]);
+        } else if (key == "Labels") {
+          setlabels(apiresp[key]);
+        }
+      });
+    },
+    (err) => {
+      alert(err);
+    }
+  );
+}
 
 export default function ConfigurePage() {
 const [isShowing, setisShowing] = useState(true)
@@ -18,6 +36,7 @@ const [isShowing, setisShowing] = useState(true)
 const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
 const [curr,setcurrcomp] = useState(0)
 const [next,setnextcomp] = useState(1)
+
 
 
 function Welcome() {
@@ -32,8 +51,8 @@ function Welcome() {
   function ConfigureBankBlock() {
     return (
       <div className={`flex gap-2 rounded-md flex-col min-h-[40ch] p-3`}>
-        <h2 className={`mb-3 text-2xl font-semibold`}>Choose Your Bank</h2>
-        <p className={`m-0 max-w-[40ch] text-s `}>
+        <h2 className={` text-2xl font-semibold`}>Choose Your Bank</h2>
+        <p className={`m-0 max-w-[40ch] text-s dark:text-stone-900 `}>
           Select Bank from below which will have gmail support for all your
           spendings.
         </p>
@@ -44,7 +63,7 @@ function Welcome() {
             { value: "SBI", label: "SBI" },
           ]}
         />
-        <Button className={`shadow-md w-20 self-center `}>Sync</Button>
+        <Button className={`shadow-md w-20 self-center `} onClick={sync}>Sync</Button>
       </div>
     );
   }
@@ -52,7 +71,7 @@ function Welcome() {
   function WhatArePockets() {
     return (
       <div className={`flex gap-2 rounded-md flex-col min-h-[40ch] p-3`}>
-        <h2 className={`mb-3 text-2xl font-semibold`}>What are Pockets?</h2>
+        <h2 className={`text-2xl font-semibold`}>What are Pockets?</h2>
         <p className={`m-0 max-w-[40ch] text-s `}>
           Pockets are the fundamental blocks to trace your exense and saving
           like 'Gullak' Below are your currently configured Pockets.
@@ -64,25 +83,23 @@ function Welcome() {
 
   function ConfigureVPABlock() {
     return (
-      <div className={`flex gap-2 rounded-md flex-col min-h-[20ch] p-3`}>
-        <h1 className={`mb-3 text-2xl font-semibold`}>
-          Configure your own labels
-        </h1>
-        <p className={`m-0 max-w-[40ch] text-s `}>
+      <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
+        <h1 className={`text-2xl font-semibold`}>Configure your own labels</h1>
+        <p className={`max-w-[40ch] text-s `}>
           These are the building blocks for assinging your transactions. you can
           think it as classification of you vpas into one small category. For eg
           : Swiggy@paytm and Swiggy@axis is a VPA you can map it to your swiggy
           label.
         </p>
-        <FetchByVPA />
+        <FetchByVPA  />
       </div>
     );
   }
 
   function ConfigurePocketsBlock() {
     return (
-      <div className={`flex flex-col min-h-[50ch] gap-2`}>
-        <h1 className={`mb-3 text-2xl font-semibold`}>
+      <div className={`flex flex-col min-h-[50ch] gap-2 p-4`}>
+        <h1 className={` text-2xl font-semibold`}>
           Configure your Pockets
         </h1>
         <p className={`m-0 max-w-[40ch] text-m `}>

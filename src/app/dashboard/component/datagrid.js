@@ -146,11 +146,11 @@
             return null
           }
           return (
-        <div >
-            <Table className='flex place-content-evenly' columns={columns} 
+        <div className='flex flex-col'>
+            <Table className='flex flex-col  p-10' columns={columns} 
             pagination ={false}
             dataSource={data} rowKey={record => record.key}/>
-            <Button type="primary" disabled={disable} loading={loadings[0]} onClick={() => onConfirm(0)}>
+            <Button className=' self-center' type="primary" disabled={disable} loading={loadings[0]} onClick={() => onConfirm(0)}>
                 Submit
             </Button>
         </div>

@@ -3,6 +3,7 @@
 import { UploadOutlined, UserOutlined,SlidersFilled,PieChartFilled, VideoCameraOutlined,DiffFilled } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import React from 'react';
+import { ThemeProvider } from "next-themes"
 
 import { useRouter } from 'next/navigation'
 
@@ -35,6 +36,7 @@ export default function Dashboard({children}) {
     
 
     return(
+      <ThemeProvider attribute="class">
     <Layout>
       <Sider
         breakpoint="lg"
@@ -81,16 +83,15 @@ export default function Dashboard({children}) {
           }}
         />
         
-        <Content
+        <Content className=''
           style={{
             margin: '24px 16px 0',
           }}
         >
-          <div
+          <div  className='bg-white dark:bg-slate-400 dark:'
             style={{
               padding: 24,
               minHeight: 900,
-              background: colorBgContainer,
             }}
           >
             {children}
@@ -105,6 +106,6 @@ export default function Dashboard({children}) {
         </Footer>
       </Layout>
     </Layout>
-    
+    </ThemeProvider>
     )
 }

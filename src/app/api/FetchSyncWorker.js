@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const serverurl = 'http://localhost:9005/'
+const serverurl = 'http://192.168.0.106:9005/'
 
 
 
@@ -60,7 +60,7 @@ export function FetchGroupedVPA(limit,offset,token){
   console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getXpnsByVpa` )
 
 
-       return      axios.get(`http://localhost:9005/expense/api/v1/getXpnsByVpa?label=HDFC&limit=${limit}&offset=${offset}`,{
+       return      axios.get(serverurl+`expense/api/v1/getXpnsByVpa?label=HDFC&limit=${limit}&offset=${offset}`,{
             headers: {           
                 'Content-Type': 'application/json',
                 'token' :  token
@@ -77,7 +77,7 @@ export function FetchVPALabelPocketMap(token){
   console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getVpaLabelPocketMapping` )
 
 
-       return      axios.get(`http://localhost:9005/expense/api/v1/getVpaLabelPocketMapping`,{
+       return      axios.get(serverurl+`expense/api/v1/getVpaLabelPocketMapping`,{
             headers: {           
                 'Content-Type': 'application/json',
                 'token' :  token

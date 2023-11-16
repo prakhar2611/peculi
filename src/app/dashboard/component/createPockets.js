@@ -45,16 +45,23 @@ export default function CreatePockets() {
     );
   }, []);
 
-  const combined = new Set();
-  Object.keys(pocketsNew_1).forEach((key) => {
-    pocketsNew_1[key].forEach((element) => {
-      combined.add(element);
+  var differenceArray =[]
+  try{
+    const combined = new Set();
+    Object.keys(pocketsNew_1).forEach((key) => {
+      pocketsNew_1[key].forEach((element) => {
+        combined.add(element);
+      });
     });
-  });
-  const differenceArray = Array.from(labels).filter(
-    (item) => !Array.from(combined).includes(item)
-  );
-  console.log("diff labels", differenceArray);
+   differenceArray = Array.from(labels).filter(
+      (item) => !Array.from(combined).includes(item)
+    );
+    console.log("diff labels", differenceArray);
+  
+  
+  }catch{
+    
+  }
 
 
 

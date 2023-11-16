@@ -15,7 +15,7 @@ export default function Callback() {
     var [expiry, setexpiry] = useState()
     var [tokentype, settokentype] = useState()
     var [res ,setres] = useState(null)
-    const serverurl = process.env.REACT_APP_SERVER_URL
+    const serverurl = "http://localhost:9005/"
 
     const router = useRouter()
 

@@ -37,7 +37,7 @@ export function SignIn() {
 
 
   export function getuserDetails() {
-    const serverurl = process.env.REACT_APP_SERVER_URL
+    const serverurl = "http://localhost:9005/"
 
     return(
       axios.get(serverurl+`api/User/v1/GetUserProfile`,{

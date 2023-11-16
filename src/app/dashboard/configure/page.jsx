@@ -13,7 +13,9 @@ import { SyncWorker } from "@/app/api/FetchSyncWorker";
 
 
 function sync() {
-  SyncWorker(token).then(
+  var token = sessionStorage.getItem('access_token');
+
+  SyncWorker(token,"","","HDFC").then(
     (apiresp) => {
       Object.keys(apiresp).forEach((key) => {
         if (key == "Pockets") {

@@ -55,12 +55,12 @@ export function UpdateVPAMapping(p,token){
     });     
 }
 
-export function FetchGroupedVPA(limit,offset,token){
+export function FetchGroupedVPA(limit,offset,token,type="CONFIGURE"){
  
   console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getXpnsByVpa` )
 
 
-       return      axios.get(serverurl+`expense/api/v1/getXpnsByVpa?label=HDFC&limit=${limit}&offset=${offset}`,{
+       return      axios.get(serverurl+`expense/api/v1/getXpnsByVpa?type=${type}&label=HDFC&limit=${limit}&offset=${offset}`,{
             headers: {           
                 'Content-Type': 'application/json',
                 'token' :  token

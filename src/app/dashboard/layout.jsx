@@ -32,6 +32,9 @@ export default function Dashboard({children}) {
             router.push('/dashboard/configure')
         else if(index.key == '2')
             router.push('/dashboard/vpa')
+        else if(index.key == '1')
+            router.push('/dashboard')
+          
     }
     
 
@@ -102,7 +105,7 @@ export default function Dashboard({children}) {
             textAlign: 'center',
           }}
         >
-          Ant Design ©2023 Created by Ant UED
+          Peculi ©2023 Created by 3rd-Cross-Boys
         </Footer>
       </Layout>
     </Layout>

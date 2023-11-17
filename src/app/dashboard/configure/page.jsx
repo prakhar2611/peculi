@@ -38,12 +38,14 @@ const [isShowing, setisShowing] = useState(true)
 const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
 const [curr,setcurrcomp] = useState(0)
 const [next,setnextcomp] = useState(1)
-
+const [activeComponentIndex, setActiveComponentIndex] = useState(1);
+const [isFadingOut, setIsFadingOut] = useState(false);
 
 
 function Welcome() {
-  return( <div className={`flex gap-2 rounded-md flex-col min-h-[20ch] p-3`}>
-  <h1 className={`mb-3 text-4xl font-semibold`}>Start Configuring</h1>
+  return( 
+    <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
+    <h1 className={`mb-3 text-4xl font-semibold`}>Start Configuring</h1>
   <p className={`m-0 max-w-[40ch] text-xl`}>
     Configure your own VPA Labels and Pockets.
   </p>
@@ -52,7 +54,7 @@ function Welcome() {
 
   function ConfigureBankBlock() {
     return (
-      <div className={`flex gap-2 rounded-md flex-col min-h-[40ch] p-3`}>
+      <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
         <h2 className={` text-2xl font-semibold`}>Choose Your Bank</h2>
         <p className={`m-0 max-w-[40ch] text-s dark:text-stone-900 `}>
           Select Bank from below which will have gmail support for all your
@@ -72,7 +74,7 @@ function Welcome() {
 
   function WhatArePockets() {
     return (
-      <div className={`flex gap-2 rounded-md flex-col min-h-[40ch] p-3`}>
+      <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
         <h2 className={`text-2xl font-semibold`}>What are Pockets?</h2>
         <p className={`m-0 max-w-[40ch] text-s `}>
           Pockets are the fundamental blocks to trace your exense and saving
@@ -100,7 +102,7 @@ function Welcome() {
 
   function ConfigurePocketsBlock() {
     return (
-      <div className={`flex flex-col min-h-[50ch] gap-2 p-4`}>
+      <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
         <h1 className={` text-2xl font-semibold`}>
           Configure your Pockets
         </h1>
@@ -116,85 +118,57 @@ function Welcome() {
   }
 
 
-  function nextbutton() {
-    if(curr < comps.length){
-      setcurrcomp(curr+1)
-      setnextcomp(curr+1)
-      setisShowing(!isShowing)
-
-    }
-      
-   
-    console.log("value of curr:" , curr)
-  }
-
   
-  function prevbutton() {
-    if(curr > 0){
-      setcurrcomp(curr-1)
-      setnextcomp(curr-1)
-    setisShowing(!isShowing)
-    }
-    
-  }
+  
+  // return (
+  //   <div
+  //     className={`grid grid-cols-1 min-h-[80ch] shadow-md gap-4 justify-items-center md:grid-cols-3  `}
+  //   >
 
-  return (
-    <div
-      className={`grid grid-cols-1 min-h-[80ch] shadow-md gap-4 justify-items-center md:grid-cols-3  `}
-    >
-     
-    {/* <Button onClick={()=>prevbutton()}>back</Button>
-    <Button onClick={()=>nextbutton()}>fwd</Button> */}
+  //  <Welcome/>
+  //  <ConfigureBankBlock/>
+  //  <ConfigureVPABlock/>
+  //  <ConfigurePocketsBlock/>
 
-      {/* Background overlay */}
-      {/* <Transition
-      show={isShowing}
-        enter="transition-opacity ease-linear delay-400 duration-300"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        
-        leave="transition-opacity ease-linear delay-400 duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        {comps[curr]}
-      </Transition> */}
+  //   </div>
+  // );
 
-      {/* Sliding sidebar */}
-      {/* <Transition
-      show={isShowing}
-        enter="transition ease-in-out delay-300 duration-300 transform"
-        enterFrom="-translate-x-full"
-        enterTo="translate-x-0"
-        leave="transition ease-in-outdelay-300 duration-300 transform"
-        leaveFrom="translate-x-0"
-        leaveTo="-translate-x-full"
-      >
-        {comps[curr]}
-      </Transition>
+  const changeComponent = (newIndex) => {
+    setIsFadingOut(true);
+    setTimeout(() => {
+        setActiveComponentIndex(newIndex);
+        setIsFadingOut(false);
+    }, 500); // 500ms for fade-out duration
+};
 
-      <Transition
-      show={!isShowing}
-        enter="transition ease-in-out delay-300 duration-300 transform"
-        enterFrom="-translate-x-full"
-        enterTo="translate-x-0"
-        leave="transition ease-in-out delay-300 duration-300 transform"
-        leaveFrom="translate-x-0"
-        leaveTo="-translate-x-full"
-      >
-        {comps[curr]}
-      </Transition>
-   */}
+const nextComponent = () => {
+    changeComponent(activeComponentIndex === 4 ? 1 : activeComponentIndex + 1);
+};
 
-   <Welcome/>
-   <ConfigureBankBlock/>
-   <ConfigureVPABlock/>
+const prevComponent = () => {
+    changeComponent(activeComponentIndex === 1 ? 4 : activeComponentIndex - 1);
+};
+
+const components = [
+  <Welcome/>,
+   <ConfigureBankBlock/>,
+   <ConfigureVPABlock/>,
    <ConfigurePocketsBlock/>
+];
 
-  {/* <button class="transition ease-in-out delay-150  bg-blue-500 hover:-translate-x-full  hover:bg-indigo-500 duration-300 ...">
-  Save Changes
-  </button> */}
-     
-    </div>
+  return(
+    <div className={`flex flex-col place-items-center gap-8
+    `}>
+
+          <div className="flex max-h-[5vh] gap-7 ">
+          <Button className={`shadow-md w-20 self-center `} onClick={prevComponent}>Backward</Button>
+            <Button  className={`shadow-md w-20 self-center `} onClick={nextComponent}>Forward</Button>
+          </div>
+            
+
+            <div className={` min-w-[20vh] transition-opacity duration-500 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
+                {components[activeComponentIndex - 1]}
+            </div>
+        </div>
   );
 }

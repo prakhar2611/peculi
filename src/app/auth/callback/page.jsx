@@ -59,7 +59,7 @@ export default function Callback() {
       //setres(mydata);
     //},[]);
 
-    router.push('/')
+    router.push('/dashboard')
 
     // if(res.data.status){
     //     return redirect("/Welcome");

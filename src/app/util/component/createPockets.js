@@ -1,5 +1,5 @@
 "use client";
-import { FetchVPALabelPocketMap, UpdatePocketsMapping } from "@/app/api/FetchSyncWorker";
+import { FetchVPALabelPocketMap, UpdatePocketsMapping } from "@/app/util/apiCallers/FetchSyncWorker";
 import {
   CloseCircleFilled,
   CloseCircleOutlined,

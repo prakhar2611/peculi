@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 
 import axios from 'axios'
 // import { useDispatch } from 'react-redux';
-import { getuserDetails } from '../../api/SignIn';
 
 
 

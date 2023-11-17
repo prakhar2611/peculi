@@ -2,7 +2,7 @@ import axios from "axios";
 const token = sessionStorage.getItem('access_token');
 
 
-export function SignIn() {
+export function signIn() {
   const serverurl = process.env.REACT_APP_GOOGLE_CALLBACK_URL
 
 
@@ -49,3 +49,21 @@ export function SignIn() {
         .then(response => response.data)
         .catch(error => {return console.error(error)}))
   }
+
+
+  export async function getUserInfo() {
+    const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`;
+    
+    try {
+        const response = await axios.get(url);
+        if (response.status === 200) {
+            return response.data; // Returns the user object
+        } else {
+            // Handle non-200 responses if needed
+        }
+    } catch (err) {
+        console.error('Error fetching user info:', err.message);
+    }
+
+    return null; // Return null in case of error or non-200 response
+}

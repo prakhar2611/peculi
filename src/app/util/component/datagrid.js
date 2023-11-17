@@ -7,7 +7,7 @@
     import { useState, useEffect } from "react";
     import { ColumnProps } from "antd/lib/table";
     import axios from 'axios'
-    import {UpdateVPAMapping} from '../../api/FetchSyncWorker'
+    import {UpdateVPAMapping} from '../apiCallers/FetchSyncWorker'
 
 
 

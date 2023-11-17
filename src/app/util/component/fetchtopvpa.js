@@ -10,8 +10,8 @@ import {
     Pagination
    } from 'antd'
    import axios from 'axios'
-import  Datagrid  from '../component/datagrid';
-import { FetchGroupedVPA} from '../../api/FetchSyncWorker';
+import  Datagrid  from './datagrid';
+import { FetchGroupedVPA} from '../apiCallers/FetchSyncWorker';
 
 
 

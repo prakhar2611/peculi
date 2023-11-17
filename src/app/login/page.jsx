@@ -4,7 +4,7 @@ import '@radix-ui/themes/styles.css';
 import "./SignIn.css"
 import { GoogleOutlined } from '@ant-design/icons';
 import { Card,Flex,Theme,Heading, AspectRatio,Button,Text,ThemePanel,Box,Grid, Container} from '@radix-ui/themes'
-import { SignIn } from '../api/SignIn';
+import { signIn } from '../util/apiCallers/Google';
 export default () => (
   <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
      {/* <Flex direction="column" gap="2">
@@ -28,7 +28,7 @@ export default () => (
             <Text mb="2">Best UX using Lexical Based Editor.</Text>
           <div>
               <Heading mb="2" size="3">Lets Start</Heading>
-              <Button onClick={SignIn}> 
+              <Button onClick={signIn}> 
                   <GoogleOutlined /> 
                   SignIn
               </Button>

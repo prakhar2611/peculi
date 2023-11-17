@@ -4,12 +4,12 @@ import { BulbTwoTone } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
 import { Button, IconButton } from "@radix-ui/themes";
 import { Select } from "antd";
-import CreateLabels from "../component/createlabels";
-import CreatePockets from "../component/createPockets";
-import FetchByVPA from "../component/fetchtopvpa";
-import Pockets from "../component/pockets";
+import CreateLabels from "../../util/component/createlabels";
+import CreatePockets from "../../util/component/createPockets";
+import FetchByVPA from "../../util/component/fetchtopvpa";
+import Pockets from "../../util/component/pockets";
 import { useState } from "react";
-import { SyncWorker } from "@/app/api/FetchSyncWorker";
+import { SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
 
 
 function sync() {

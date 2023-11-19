@@ -1,5 +1,5 @@
 import axios from "axios";
-const token = sessionStorage.getItem('access_token');
+
 
 
 export function signIn() {
@@ -51,7 +51,7 @@ export function signIn() {
   }
 
 
-  export async function getUserInfo() {
+  export async function getUserInfo(token) {
     const url = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${token}`;
     
     try {

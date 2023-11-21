@@ -11,8 +11,9 @@ export async function GET(request, { params }) {
         return Response.json({data : response});
         break;
         case 'getvpadata':
-            const month = 'Nov'
-            console.log("current month data requested for : ", month )
+          const { searchParams } = new URL(request.url)
+          const month = searchParams.get('month')
+           
              response = await getVpaData(token,month)   
 
             return Response.json({data : response});

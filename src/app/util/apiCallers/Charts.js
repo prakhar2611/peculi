@@ -17,7 +17,7 @@ export function getMonthlyChartData(token){
 
 
   export function getVpaChartData(token,currentMonth){
- 
+    console.log("vpa data requested for" ,currentMonth)
     return    axios.get(`http://localhost:3000/api/chart/getvpadata?month=${currentMonth}`,{
          headers: {           
              'Content-Type': 'application/json',

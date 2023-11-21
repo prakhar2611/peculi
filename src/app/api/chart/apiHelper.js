@@ -36,7 +36,6 @@ export async function getMonthlyData(token) {
         const params = [userid.id];
 
         const res = await client.query(query,params);
-        console.log("data from the dat base ",res.rows)
         return res.rows; // Returns an array of monthly data
     } catch (err) {
         console.log(err)
@@ -49,6 +48,7 @@ export async function getMonthlyData(token) {
 
 export async function getVpaData(token,month) {
     const client = await pool.connect();
+    console.log("current month data requested for : ",month)
 
     const userid = await getUserInfo(token)
 
@@ -57,9 +57,9 @@ export async function getVpaData(token,month) {
         WITH cte AS (
             SELECT
                 to_account AS vpa,
-                SUM(amount_debited) AS totalamount,
+                SUM(amount_debited):: float AS totalamount,
                 TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month,
-                COUNT(*) AS totaltxn,
+                COUNT(*):: float AS totaltxn,
                 user_id as userId
             FROM
                 b64decoded_responses
@@ -87,8 +87,9 @@ export async function getVpaData(token,month) {
         const params = [userid.id,month];
 
         const res = await client.query(query,params);
-        console.log("vpa data from the dat base ",res.rows)
         return res.rows; // Returns an array of monthly data
+        console.log("getVpaData data ->",res.rows)
+
     } catch (err) {
         console.log(err)
         console.error("error from the db ",err);

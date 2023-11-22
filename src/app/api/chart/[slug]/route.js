@@ -1,8 +1,10 @@
-import { getMonthlyData, getVpaData } from "../apiHelper";
+import { getMonthlyData, getNonLabeledVpaData, getVpaData } from "../apiHelper";
 export async function GET(request, { params }) {
 
   const slug = params.slug
   const token = request.headers.get("token")
+  const { searchParams } = new URL(request.url)
+  var month = ""
 
   let response = null
   switch (slug) {
@@ -10,14 +12,17 @@ export async function GET(request, { params }) {
          response= await getMonthlyData(token)   
         return Response.json({data : response});
         break;
-        case 'getvpadata':
-          const { searchParams } = new URL(request.url)
-          const month = searchParams.get('month')
-           
-             response = await getVpaData(token,month)   
+    case 'getvpadata':
+         month = searchParams.get('month')
+        response = await getVpaData(token,month)   
+        return Response.json({data : response});
+        break;
 
-            return Response.json({data : response});
-            break;
+    case 'getNonLabeledvpadata':
+         month = searchParams.get('month')
+        response = await getNonLabeledVpaData(token,month)   
+        return Response.json({data : response});
+        break;    
     default :
     return Response.json({ error: 'Endpoint not found' });
 

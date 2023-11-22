@@ -1,17 +1,10 @@
 "use client"
 import React, { useState,useEffect } from 'react';
-import { 
-    Button,
-    DatePicker,
-    Form,
-    Select,
-    Space,
-    Radio,
-    Pagination
-   } from 'antd'
-   import axios from 'axios'
-import { getMonthlyChartData, getVpaChartData } from '../util/apiCallers/Charts';
-import { ChartInfo, MonthlyDataChart, VpaDonutChart } from '../util/component/chartsComponent';
+import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/react";
+
+import { getMonthlyChartData, getNonLabeledVpaChartData, getVpaChartData } from '../util/apiCallers/Charts';
+import { ChartInfo, MonthlyDataChart, NonLabeledVpaChart, VpaDonutChart } from '../util/component/chartsComponent';
+import { Input } from 'antd';
 
 
 
@@ -19,11 +12,17 @@ import { ChartInfo, MonthlyDataChart, VpaDonutChart } from '../util/component/ch
 
 export default function FetchByVPA (){
  const [data,setData] = useState(null)
+ const [selectedMonth, setSelectedMonth] = useState({month: "", amount : 0});
+
  const [vpaData,setVpaData] = useState(null)
+ const [slectedVpa, setSelectedVpa] = useState(null)
+
+ const [nonLabeledvpaData,setnonLabeledvpaData] = useState(null)
+ const [slectedNonLabledVpa, setslectedNonLabledVpa] = useState(null)
+
+const [reloadDonuts ,setreloadDonuts] = useState(false)
  const [isVpaDatafetched,setVpaDatafetched] =  useState(false)
- const [currentMonth, setCurrentMonth] = useState(null)
- const [currentMonthSpend, setcurrentMonthSpend] = useState(null)
- const [value, setValue] = React.useState(null);
+ 
 
 
 
@@ -32,10 +31,11 @@ export default function FetchByVPA (){
   
   useEffect( () => {
     getMonthlyChartData(token).then((res) => {
-
-      setData(res.data)
-      setCurrentMonth(res.data[res.data.length-1].month)
-      setcurrentMonthSpend(res.data[res.data.length-1].amount)
+      if (res != null) {
+        setData(res.data)
+        setSelectedMonth(res.data[res.data.length-1])
+  
+      }
 
       },(err) => {
         alert(err)
@@ -44,38 +44,76 @@ export default function FetchByVPA (){
 
 
   useEffect( () => {
-    getVpaChartData(token,currentMonth).then((res) => {
+    if (selectedMonth.month != "" ) {
+      getVpaChartData(token,selectedMonth.month).then((res) => {
 
-      setVpaData(res.data)
-      setVpaDatafetched(true)
+        setVpaData(res.data)
+        setVpaDatafetched(true)
+  
+        },(err) => {
+          alert(err)
+        })
 
-      },(err) => {
-        alert(err)
-      })
-  } , [currentMonth])
+        getNonLabeledVpaChartData(token,selectedMonth.month).then((res) => {
+
+          setnonLabeledvpaData(res.data)
+          setslectedNonLabledVpa(res.data[0])
+          },(err) => {
+            alert(err)
+          })
+    }
+
+  } , [selectedMonth,reloadDonuts])
 
 
   function setMonth(data) {
-    setValue(data)
-    setCurrentMonth(data.month)
-    setcurrentMonthSpend(data.amount)
+    if(data != null){
+      setSelectedMonth(data)
+
+    }
     // console.log("on monthly clicked change : ", currentMonth)
-  } 
+  }
+  
+  function onNonLabeledValueChange (data) {
+      if(data != null) {
+        setslectedNonLabledVpa(data)
+      }
+
+  }
+
+  function onVpaValueChange(data) {
+    setSelectedVpa(data)
+  }
+
+  function doReloadDonuts (value) {
+    setreloadDonuts(!reloadDonuts)
+    console.log("reload donuts ")
+
+  }
 
 
-console.log("total amount" , currentMonthSpend)
-console.log("total amount" , currentMonth)
+console.log("Monthly Data chart : ",data)
+console.log("VPA Data chart : ",vpaData)
+
+console.log("slected month" , selectedMonth)
+console.log("slected vpa ", slectedVpa)
+
+console.log("Non labled VPA Data chart : ",nonLabeledvpaData)
+
+
+console.log("on non labled vpa clicked change : ", slectedNonLabledVpa)
+
 
 
      return(
-        <div className='grid grid-cols-3 gap-3'>
+        <div className='grid grid-row-1 gap-3 md:grid-cols-3'>
           
           <div>
           <MonthlyDataChart data = {data} setMonth = {setMonth} />
           </div>
-           <ChartInfo totalAmount={currentMonthSpend} currentMonth={currentMonth}/>
-          
-          {(isVpaDatafetched) ? <VpaDonutChart data={vpaData} /> : <></>}
+          {(isVpaDatafetched) ? <ChartInfo totalAmount={selectedMonth.amount} currentMonth={selectedMonth.month} /> : <></>}
+          {(isVpaDatafetched) ? <VpaDonutChart data={vpaData} onVpaValueChange={onVpaValueChange} index={"label"} title={"Labeled Data"} /> : <></>}
+          {(isVpaDatafetched) ? <NonLabeledVpaChart data={nonLabeledvpaData} onVpaValueChange={onNonLabeledValueChange} index={"vpa"} title={"Unlabeled Data"} slectedNonLabledVpa={slectedNonLabledVpa}  doReloadDonuts= {doReloadDonuts}/>: <></>}
 
         </div>
      

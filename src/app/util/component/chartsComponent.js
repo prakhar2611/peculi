@@ -1,11 +1,13 @@
-import { AreaChart, Card, Title,Callout, Metric, Text  } from "@tremor/react";
+import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/react";
 import {  DonutChart } from "@tremor/react";
 import { useState } from "react";
-import { CheckCircleIcon, ExclamationIcon, LightBulbIcon } from "@heroicons/react/solid";
+import { ArrowCircleRightIcon, CheckCircleIcon, ExclamationIcon, LightBulbIcon } from "@heroicons/react/solid";
+import { Button, Input } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
+import { UpdateVPAMapping } from "../apiCallers/FetchSyncWorker";
 
 
 export function MonthlyDataChart ({data,setMonth}) {
-    console.log("Monthly Data chart : ",data)
  return (
     <div>
           <Card >
@@ -27,12 +29,15 @@ export function MonthlyDataChart ({data,setMonth}) {
 }
 
 
-export function VpaDonutChart ({data}) {
-  
-    console.log("VPA Data chart : ",data)
+export function VpaDonutChart ({data,onVpaValueChange,index,title}) {
+
+    // var barchartdata = []
+    // data.forEach(element => {
+    //     var barChart = { name : element.label, value : element.totalamount}
+    //     barchartdata.push(barChart)
+    //  });
       
       const valueFormatter = (number) => `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
-      
       const customTooltip = ({ payload, active }) => {
 
         if (!active || !payload) return null;
@@ -42,14 +47,14 @@ export function VpaDonutChart ({data}) {
         return (
           <div className="w-56 rounded-tremor-default text-tremor-default bg-tremor-background p-2 shadow-tremor-dropdown border border-tremor-border">
             <div className="flex flex-1 space-x-2.5">
-              <div className={`w-1.5 flex flex-col bg-${categoryPayload?.color}-500 rounded`} />
+              <div className={`max-w-2 flex flex-col bg-${categoryPayload?.color}-500 rounded`} />
               <div className="w-full">
                 <div className="flex items-center justify-between space-x-8">
                   <p className="text-right text-tremor-content whitespace-nowrap">
-                    {categoryPayload.name}
+                    {categoryPayload?.name}
                   </p>
                   <p className="font-medium text-right whitespace-nowrap text-tremor-content-emphasis">
-                    {categoryPayload.value}
+                    {categoryPayload?.value}
                   </p>
                   
                 </div>
@@ -69,20 +74,26 @@ export function VpaDonutChart ({data}) {
         );
       };
       
-    
+// console.log("barchart data  :-",barchartdata)
         return (
           <>
             <Card className="mx-auto">
-            <Title>VPA-wise Data </Title>
+            <Title>{title} : {data?.length} </Title>
 
               <DonutChart
                 className="mt-6"
-                data={data}
+                data={data || []}
                 category="totalamount"
-                index="label"
+                index={index}
                 valueFormatter={valueFormatter}
                 customTooltip={customTooltip}
+                onValueChange={onVpaValueChange}
               />
+
+{/* <BarList data={barchartdata} 
+className="mt-2" 
+/> */}
+
 
             </Card>
           </>
@@ -116,5 +127,49 @@ export function ChartInfo ({totalAmount,currentMonth}) {
 
     
   </>
+    )
+}
+
+
+export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNonLabledVpa,doReloadDonuts}) {
+    const [label,setLabel] = useState(null)
+
+     function updateLabel(vpa) {
+        const payload = {}
+        payload[vpa] = label
+        //calling server to update the category
+        var token = sessionStorage.getItem('access_token');
+        const p = {
+            'data' : payload
+        }
+
+        // console.log("payload for updating the vpa",p)
+        doReloadDonuts(false)
+
+        UpdateVPAMapping(p,token).then((res) => {
+          console.log("reposne data " , res)
+        },(err) => {
+          alert(err)
+        })
+        setLabel("")
+
+     }
+
+    return (
+        <div> 
+        <VpaDonutChart data={data} onVpaValueChange={onVpaValueChange} index={index} title={title} />
+
+        <Card>
+        <div className="flex items-center justify-between space-x-8">
+            <p className="text-right text-tremor-content whitespace-nowrap">
+              {slectedNonLabledVpa?.vpa}
+            </p>
+            <Input title="Enter label" value={label} onChange={(e) => setLabel(e.target.value)}  />
+            <ArrowRightOutlined onClick={() => updateLabel(slectedNonLabledVpa?.vpa)}/>
+            
+          </div>
+        </Card>
+        </div>
+       
     )
 }

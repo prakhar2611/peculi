@@ -2,7 +2,7 @@ import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/r
 import {  DonutChart } from "@tremor/react";
 import { useState } from "react";
 import { ArrowCircleRightIcon, CheckCircleIcon, ExclamationIcon, LightBulbIcon } from "@heroicons/react/solid";
-import { Button, Input } from "antd";
+import { AutoComplete, Button, Input } from "antd";
 import { ArrowRightOutlined } from "@ant-design/icons";
 import { UpdateVPAMapping } from "../apiCallers/FetchSyncWorker";
 
@@ -131,7 +131,7 @@ export function ChartInfo ({totalAmount,currentMonth}) {
 }
 
 
-export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNonLabledVpa,doReloadDonuts}) {
+export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNonLabledVpa,doReloadDonuts,availableLabel}) {
     const [label,setLabel] = useState(null)
 
      function updateLabel(vpa) {
@@ -154,6 +154,7 @@ export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNo
         setLabel("")
 
      }
+     console.log("Available label : ", availableLabel)
 
     return (
         <div> 
@@ -161,10 +162,23 @@ export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNo
 
         <Card>
         <div className="flex items-center justify-between space-x-8">
-            <p className="text-right text-tremor-content whitespace-nowrap">
+            <p className="text-right text-tremor-content whitespace-nowrap max-w-[10vh]">
               {slectedNonLabledVpa?.vpa}
             </p>
-            <Input title="Enter label" value={label} onChange={(e) => setLabel(e.target.value)}  />
+            <AutoComplete
+    style={{
+      width: 200,
+    }}
+    options={availableLabel}
+    placeholder="try to type `b`"
+    filterOption={(inputValue, option) =>
+      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+    }
+    onChange={(inputValue) => setLabel(inputValue)} 
+    value={label}
+    
+  />
+            {/* <Input title="Enter label" value={label} onChange={(e) => setLabel(e.target.value)}  /> */}
             <ArrowRightOutlined onClick={() => updateLabel(slectedNonLabledVpa?.vpa)}/>
             
           </div>

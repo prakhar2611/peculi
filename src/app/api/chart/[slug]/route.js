@@ -1,4 +1,4 @@
-import { getMonthlyData, getNonLabeledVpaData, getVpaData } from "../apiHelper";
+import { getMonthlyData, getNonLabeledVpaData, getUniqueVpa, getVpaData } from "../apiHelper";
 export async function GET(request, { params }) {
 
   const slug = params.slug
@@ -23,6 +23,10 @@ export async function GET(request, { params }) {
         response = await getNonLabeledVpaData(token,month)   
         return Response.json({data : response});
         break;    
+    case 'getUniqueVpa':
+      response = await getUniqueVpa(token)   
+      return Response.json({data : response});
+      break;        
     default :
     return Response.json({ error: 'Endpoint not found' });
 

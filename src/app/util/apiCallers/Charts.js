@@ -45,3 +45,17 @@ export function getNonLabeledVpaChartData(token,currentMonth){
          .catch(error => console.error(error));
 
 } 
+
+export function getUniqueVpaData(token){
+    
+    return    axios.get(`http://localhost:3000/api/chart/getUniqueVpa`,{
+         headers: {           
+             'Content-Type': 'application/json',
+             'token' :  token
+         },        
+     })
+     .then(response => response.data
+     )
+         .catch(error => console.error(error));
+
+} 

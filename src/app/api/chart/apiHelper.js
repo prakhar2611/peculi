@@ -156,3 +156,28 @@ export async function getNonLabeledVpaData(token,month) {
         client.release(); // Make sure to release the client back to the pool
     }
 }
+
+export async function getUniqueVpa(token) {
+    const client = await pool.connect();
+
+    const userid = await getUserInfo(token)
+
+    try {
+        const query = `
+        select Distinct(LABEL) from vpa_label_pocket_dbos  where user_id = $1 order by label 
+        `;
+        
+        const params = [userid.id];
+
+        const res = await client.query(query,params);
+        return res.rows; // Returns an array of monthly data
+        console.log("getVpaData data ->",res.rows)
+
+    } catch (err) {
+        console.log(err)
+        console.error("error from the db ",err);
+        return []; // Return an empty array in case of an error
+    } finally {
+        client.release(); // Make sure to release the client back to the pool
+    }
+}

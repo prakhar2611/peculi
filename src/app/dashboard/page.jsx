@@ -2,7 +2,7 @@
 import React, { useState,useEffect } from 'react';
 import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/react";
 
-import { getMonthlyChartData, getNonLabeledVpaChartData, getVpaChartData } from '../util/apiCallers/Charts';
+import { getMonthlyChartData, getNonLabeledVpaChartData, getUniqueVpaData, getVpaChartData } from '../util/apiCallers/Charts';
 import { ChartInfo, MonthlyDataChart, NonLabeledVpaChart, VpaDonutChart } from '../util/component/chartsComponent';
 import { Input } from 'antd';
 
@@ -22,6 +22,8 @@ export default function FetchByVPA (){
 
 const [reloadDonuts ,setreloadDonuts] = useState(false)
  const [isVpaDatafetched,setVpaDatafetched] =  useState(false)
+
+ const [availableLabel,setavailableLabel] = useState(null)
  
 
 
@@ -31,7 +33,7 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
   
   useEffect( () => {
     getMonthlyChartData(token).then((res) => {
-      if (res != null) {
+      if (res.data != null) {
         setData(res.data)
         setSelectedMonth(res.data[res.data.length-1])
   
@@ -45,9 +47,11 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
 
   useEffect( () => {
     if (selectedMonth.month != "" ) {
+      const availableLabel = []
       getVpaChartData(token,selectedMonth.month).then((res) => {
 
         setVpaData(res.data)
+        
         setVpaDatafetched(true)
   
         },(err) => {
@@ -61,6 +65,17 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
           },(err) => {
             alert(err)
           })
+
+          getUniqueVpaData(token).then((res) => {
+res?.data.forEach(element => {
+  availableLabel.push({"value" : element.label})
+});
+setavailableLabel(availableLabel)
+
+            },(err) => {
+              alert(err)
+            })
+
     }
 
   } , [selectedMonth,reloadDonuts])
@@ -99,8 +114,6 @@ console.log("slected month" , selectedMonth)
 console.log("slected vpa ", slectedVpa)
 
 console.log("Non labled VPA Data chart : ",nonLabeledvpaData)
-
-
 console.log("on non labled vpa clicked change : ", slectedNonLabledVpa)
 
 
@@ -113,7 +126,15 @@ console.log("on non labled vpa clicked change : ", slectedNonLabledVpa)
           </div>
           {(isVpaDatafetched) ? <ChartInfo totalAmount={selectedMonth.amount} currentMonth={selectedMonth.month} /> : <></>}
           {(isVpaDatafetched) ? <VpaDonutChart data={vpaData} onVpaValueChange={onVpaValueChange} index={"label"} title={"Labeled Data"} /> : <></>}
-          {(isVpaDatafetched) ? <NonLabeledVpaChart data={nonLabeledvpaData} onVpaValueChange={onNonLabeledValueChange} index={"vpa"} title={"Unlabeled Data"} slectedNonLabledVpa={slectedNonLabledVpa}  doReloadDonuts= {doReloadDonuts}/>: <></>}
+          {(isVpaDatafetched) ? <NonLabeledVpaChart 
+                                    data={nonLabeledvpaData} 
+                                    onVpaValueChange={onNonLabeledValueChange} 
+                                    index={"vpa"} 
+                                    title={"Unlabeled Data"} 
+                                    slectedNonLabledVpa={slectedNonLabledVpa}  
+                                    doReloadDonuts= {doReloadDonuts} 
+                                    availableLabel = {availableLabel}/>
+                                    : <></>}
 
         </div>
      

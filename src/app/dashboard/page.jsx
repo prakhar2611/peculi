@@ -20,6 +20,10 @@ export default function FetchByVPA (){
  const [nonLabeledvpaData,setnonLabeledvpaData] = useState(null)
  const [slectedNonLabledVpa, setslectedNonLabledVpa] = useState(null)
 
+ const [pocketData,setpocketData] = useState({
+  name : []
+  })
+
 const [reloadDonuts ,setreloadDonuts] = useState(false)
  const [isVpaDatafetched,setVpaDatafetched] =  useState(false)
 
@@ -49,37 +53,47 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
     if (selectedMonth.month != "" ) {
       const availableLabel = []
       getVpaChartData(token,selectedMonth.month).then((res) => {
-
-        setVpaData(res.data)
-        
+        setVpaData(res.data)  
         setVpaDatafetched(true)
-  
         },(err) => {
           alert(err)
         })
 
-        getNonLabeledVpaChartData(token,selectedMonth.month).then((res) => {
+      getNonLabeledVpaChartData(token,selectedMonth.month).then((res) => {
+        setnonLabeledvpaData(res.data)
+        setslectedNonLabledVpa(res.data[0])
+        },(err) => {
+          alert(err)
+        })
 
-          setnonLabeledvpaData(res.data)
-          setslectedNonLabledVpa(res.data[0])
-          },(err) => {
-            alert(err)
-          })
+      getUniqueVpaData(token).then((res) => {
+      res?.data.forEach(element => {
+        availableLabel.push({"value" : element.label})
+        });
+        setavailableLabel(availableLabel)
+        },(err) => {
+          alert(err)
+        })
 
-          getUniqueVpaData(token).then((res) => {
-res?.data.forEach(element => {
-  availableLabel.push({"value" : element.label})
-});
-setavailableLabel(availableLabel)
-
-            },(err) => {
-              alert(err)
-            })
+      
+      
 
     }
 
   } , [selectedMonth,reloadDonuts])
 
+  useEffect(() => {
+    if (vpaData != null ){
+ //processing vpa grouping with list of labels and total amount 
+ vpaData.forEach(element => {
+  if (!(element in pocketData)){
+      pocketData[element.label] = {}
+  }
+});
+    }
+   
+
+  },[vpaData])
 
   function setMonth(data) {
     if(data != null){

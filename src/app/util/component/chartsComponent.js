@@ -162,7 +162,7 @@ export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNo
 
         <Card>
         <div className="flex items-center justify-between space-x-8">
-            <p className="text-right text-tremor-content whitespace-nowrap max-w-[10vh]">
+            <p className="text-right text-tremor-content whitespace-nowrap max-w-[20vh]">
               {slectedNonLabledVpa?.vpa}
             </p>
             <AutoComplete

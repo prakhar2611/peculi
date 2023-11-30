@@ -73,7 +73,8 @@ export async function getVpaData(token,month) {
             a.vpa,
             a.totalamount,
             a.totaltxn,
-            b.label
+            b.label,
+            b.pocket
         FROM
             cte a
             LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa

@@ -1,4 +1,4 @@
-import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/react";
+import { AreaChart, Card,Title,Callout, Metric, Text,BarList,Bold, Flex  } from "@tremor/react";
 import {  DonutChart } from "@tremor/react";
 import { useState } from "react";
 import { ArrowCircleRightIcon, CheckCircleIcon, ExclamationIcon, LightBulbIcon } from "@heroicons/react/solid";
@@ -187,3 +187,100 @@ export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNo
        
     )
 }
+
+ function BarChart ({data,name}) {
+
+return (
+  <Card className=" max-w-md">
+    <Title>{name}</Title>
+    <Flex className="mt-4">
+      <Text>
+        <Bold>Labels</Bold>
+      </Text>
+      <Text>
+        <Bold>Amount</Bold>
+      </Text>
+    </Flex>
+    <BarList data={data} className="mt-2" />
+  </Card>
+);
+}
+
+ export function PocketDataChart ( {aggdata}) {
+
+  const [activeComponentIndex, setActiveComponentIndex] = useState(1);
+const [isFadingOut, setIsFadingOut] = useState(false);
+  
+  var components = []
+  var len = 0
+
+  
+  for (const pocket in aggdata) {
+   
+
+    const eachPocketdata = Object.entries(aggdata[pocket]).map(([key,value]) => {
+        return {
+          name : key,
+          value :value
+        }
+      })
+      console.log("each pocket data - ",eachPocketdata )
+
+      components.push(<BarChart data = {eachPocketdata} name = {pocket}/>)
+      len =len+1
+  }
+
+
+
+  const changeComponent = (newIndex) => {
+    setIsFadingOut(true);
+    setTimeout(() => {
+        setActiveComponentIndex(newIndex);
+        setIsFadingOut(false);
+    }, 500); // 500ms for fade-out duration
+};
+
+const nextComponent = () => {
+      len =len+1
+  changeComponent(activeComponentIndex === len ? 1 : activeComponentIndex + 1);
+};
+
+const prevComponent = () => {
+  changeComponent(activeComponentIndex === 1 ? len : activeComponentIndex - 1);
+};
+
+
+  return(
+    // <div className={`flex flex-col place-items-center gap-8
+    // `}>
+
+    //       <div className="flex  gap-7 ">
+    //       <Button className={`shadow-md w-20 self-center `} onClick={prevComponent}>Backward</Button>
+    //         <Button  className={`shadow-md w-20 self-center `} onClick={nextComponent}>Forward</Button>
+    //       </div>
+            
+
+    //         <div className={` transition-opacity duration-500 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
+    //             {components[activeComponentIndex - 1]}
+    //         </div>
+    //     </div>
+//     <>
+// {    components[1]
+// }    </>
+
+<Card className="max-w-md max-h-[21rem] overflow-y-auto">
+  <Flex flexDirection="col" className=" gap-5  " >
+  <Flex >
+    <Button className={`shadow-md w-20 self-center `} onClick={prevComponent}>Backward</Button>
+   <Button  className={`shadow-md w-20 self-center `} onClick={nextComponent}>Forward</Button>
+    </Flex>
+
+    <Flex className={` transition-opacity duration-500 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
+                {components[activeComponentIndex - 1]}
+            </Flex>
+  </Flex>
+    
+  </Card>
+  )
+ }
+  

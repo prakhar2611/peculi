@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react';
 import { AreaChart, Card, Title,Callout, Metric, Text,BarList  } from "@tremor/react";
 
 import { getMonthlyChartData, getNonLabeledVpaChartData, getUniqueVpaData, getVpaChartData } from '../util/apiCallers/Charts';
-import { ChartInfo, MonthlyDataChart, NonLabeledVpaChart, VpaDonutChart } from '../util/component/chartsComponent';
+import { ChartInfo, MonthlyDataChart, NonLabeledVpaChart, PocketDataChart, VpaDonutChart } from '../util/component/chartsComponent';
 import { Input } from 'antd';
 
 
@@ -21,7 +21,6 @@ export default function FetchByVPA (){
  const [slectedNonLabledVpa, setslectedNonLabledVpa] = useState(null)
 
  const [pocketData,setpocketData] = useState({
-  name : []
   })
 
 const [reloadDonuts ,setreloadDonuts] = useState(false)
@@ -55,6 +54,8 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
       getVpaChartData(token,selectedMonth.month).then((res) => {
         setVpaData(res.data)  
         setVpaDatafetched(true)
+        constructPocketData(res.data)
+
         },(err) => {
           alert(err)
         })
@@ -76,24 +77,11 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
         })
 
       
-      
 
     }
 
   } , [selectedMonth,reloadDonuts])
 
-  useEffect(() => {
-    if (vpaData != null ){
- //processing vpa grouping with list of labels and total amount 
- vpaData.forEach(element => {
-  if (!(element in pocketData)){
-      pocketData[element.label] = {}
-  }
-});
-    }
-   
-
-  },[vpaData])
 
   function setMonth(data) {
     if(data != null){
@@ -120,6 +108,27 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
 
   }
 
+  function constructPocketData(data) {
+    if (data != null ){
+      //processing vpa grouping with list of labels and total amount 
+      for (const element of data){
+       if (element.pocket in pocketData){
+          if (element.label in pocketData[element.pocket] ) {
+            pocketData[element.pocket][element.label] = pocketData[element.pocket][element.label] + element.totalamount
+          }else{
+            pocketData[element.pocket][element.label] = element.totalamount
+
+          }
+         }
+       else{
+         pocketData[element.pocket] = {}
+     
+       }
+      }
+     
+         }
+  }
+
 
 console.log("Monthly Data chart : ",data)
 console.log("VPA Data chart : ",vpaData)
@@ -129,6 +138,8 @@ console.log("slected vpa ", slectedVpa)
 
 console.log("Non labled VPA Data chart : ",nonLabeledvpaData)
 console.log("on non labled vpa clicked change : ", slectedNonLabledVpa)
+
+console.log("Pocket Data : ",pocketData)
 
 
 
@@ -149,6 +160,7 @@ console.log("on non labled vpa clicked change : ", slectedNonLabledVpa)
                                     doReloadDonuts= {doReloadDonuts} 
                                     availableLabel = {availableLabel}/>
                                     : <></>}
+          {(isVpaDatafetched) ? <PocketDataChart aggdata = {pocketData}/>: <></>}    
 
         </div>
      

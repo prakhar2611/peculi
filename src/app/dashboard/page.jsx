@@ -20,8 +20,7 @@ export default function FetchByVPA (){
  const [nonLabeledvpaData,setnonLabeledvpaData] = useState(null)
  const [slectedNonLabledVpa, setslectedNonLabledVpa] = useState(null)
 
- const [pocketData,setpocketData] = useState({
-  })
+ const [pocketData,setpocketData] = useState()
 
 const [reloadDonuts ,setreloadDonuts] = useState(false)
  const [isVpaDatafetched,setVpaDatafetched] =  useState(false)
@@ -83,6 +82,7 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
   } , [selectedMonth,reloadDonuts])
 
 
+
   function setMonth(data) {
     if(data != null){
       setSelectedMonth(data)
@@ -109,24 +109,27 @@ const [reloadDonuts ,setreloadDonuts] = useState(false)
   }
 
   function constructPocketData(data) {
-    if (data != null ){
+    var pData = {}
+    if (data != null && pocketData == null){
       //processing vpa grouping with list of labels and total amount 
       for (const element of data){
-       if (element.pocket in pocketData){
-          if (element.label in pocketData[element.pocket] ) {
-            pocketData[element.pocket][element.label] = pocketData[element.pocket][element.label] + element.totalamount
-          }else{
-            pocketData[element.pocket][element.label] = element.totalamount
 
-          }
-         }
-       else{
-         pocketData[element.pocket] = {}
-     
-       }
+      
+        if (!(element.pocket in pData)){
+          pData[element.pocket] = {}     
+         }else{}
+    
+        if (element.label in pData[element.pocket] ) {
+          pData[element.pocket][element.label] = pData[element.pocket][element.label] + element.totalamount
+        }else{
+          pData[element.pocket][element.label] = element.totalamount
+
+        }
+
+
       }
-     
-         }
+     setpocketData(pData)
+    }
   }
 
 

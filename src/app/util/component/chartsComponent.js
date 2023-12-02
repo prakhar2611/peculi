@@ -188,11 +188,13 @@ export function NonLabeledVpaChart ({data,onVpaValueChange,index,title,slectedNo
     )
 }
 
- function BarChart ({data,name}) {
+ function BarChart ({data,name,totalSum}) {
 
 return (
-  <Card className=" max-w-md">
+  <Card className=" max-w-md  max-h-[21rem] overflow-y-auto">
+    
     <Title>{name}</Title>
+    <Text>Total Sum {totalSum}</Text>
     <Flex className="mt-4">
       <Text>
         <Bold>Labels</Bold>
@@ -217,16 +219,16 @@ const [isFadingOut, setIsFadingOut] = useState(false);
   
   for (const pocket in aggdata) {
    
-
+    var sum = 0
     const eachPocketdata = Object.entries(aggdata[pocket]).map(([key,value]) => {
+      sum = sum + value
         return {
           name : key,
           value :value
         }
       })
-      console.log("each pocket data - ",eachPocketdata )
 
-      components.push(<BarChart data = {eachPocketdata} name = {pocket}/>)
+      components.push(<BarChart data = {eachPocketdata} name = {pocket} totalSum = {sum}/>)
       len =len+1
   }
 
@@ -268,7 +270,7 @@ const prevComponent = () => {
 // {    components[1]
 // }    </>
 
-<Card className="max-w-md max-h-[21rem] overflow-y-auto">
+<Card className="max-w-md ">
   <Flex flexDirection="col" className=" gap-5  " >
   <Flex >
     <Button className={`shadow-md w-20 self-center `} onClick={prevComponent}>Backward</Button>

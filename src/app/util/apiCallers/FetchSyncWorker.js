@@ -111,3 +111,24 @@ export function UpdatePocketsMapping(p,token){
       throw error;
     });     
 }
+
+
+export function updateSplitTransaction(p,token){
+ 
+  const payload = {
+    data : p.Transactions,
+    splitby : p.Splitby
+  }
+  console.log("update payload :",JSON.stringify(payload));
+
+  return axios.post(serverurl+'expense/api/v1/UpdateSplitTransaction', JSON.stringify(payload),{
+      headers: {
+          'Content-Type': 'application/json',
+          'token' :  token
+       },
+  }).then(response => response.data)
+    .catch(error => {
+      console.error(error);
+      throw error;
+    });     
+}

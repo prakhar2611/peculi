@@ -1,4 +1,4 @@
-import { getMonthlyData, getNonLabeledVpaData, getUniqueVpa, getVpaData } from "../apiHelper";
+import { getMonthlyData, getNonLabeledVpaData, getRecentTransaction, getUniqueVpa, getVpaData } from "../apiHelper";
 export async function GET(request, { params }) {
 
   const slug = params.slug
@@ -26,7 +26,14 @@ export async function GET(request, { params }) {
     case 'getUniqueVpa':
       response = await getUniqueVpa(token)   
       return Response.json({data : response});
-      break;        
+      break;     
+      
+    case "getRecentTransaction" : 
+    month = searchParams.get('month')
+    console.log("Inside get recent trxn")
+      response = await getRecentTransaction(token,month)   
+      return Response.json({data : response});
+      break;     
     default :
     return Response.json({ error: 'Endpoint not found' });
 

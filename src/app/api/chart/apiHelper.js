@@ -1,18 +1,16 @@
-import { getUserInfo } from '@/app/util/apiCallers/Google';
+import { getUserInfo } from "@/app/util/apiCallers/Google";
 
-
-const pool = require('../../util/dbConnector');
+const pool = require("../../util/dbConnector");
 //const token = sessionStorage.getItem("access_token");
 
-
 export async function getMonthlyData(token) {
-    const client = await pool.connect();
+  const client = await pool.connect();
 
-    const userid = await getUserInfo(token)
-    console.log("userid ", userid)
+  const userid = await getUserInfo(token);
+  console.log("userid ", userid);
 
-    try {
-        const query = `
+  try {
+    const query = `
         WITH monthly_totals AS (
             SELECT 
                 DATE_TRUNC('month', e_time) AS truncated_month,
@@ -34,27 +32,27 @@ export async function getMonthlyData(token) {
         ORDER BY 
             truncated_month;
         `;
-        const params = [userid.id];
+    const params = [userid.id];
 
-        const res = await client.query(query,params);
-        return res.rows; // Returns an array of monthly data
-    } catch (err) {
-        console.log(err)
-        console.error("error from the db ",err);
-        return []; // Return an empty array in case of an error
-    } finally {
-        client.release(); // Make sure to release the client back to the pool
-    }
+    const res = await client.query(query, params);
+    return res.rows; // Returns an array of monthly data
+  } catch (err) {
+    console.log(err);
+    console.error("error from the db ", err);
+    return []; // Return an empty array in case of an error
+  } finally {
+    client.release(); // Make sure to release the client back to the pool
+  }
 }
 
-export async function getVpaData(token,month) {
-    const client = await pool.connect();
-    console.log("current month data requested for : ",month)
+export async function getVpaData(token, month) {
+  const client = await pool.connect();
+  console.log("current month data requested for : ", month);
 
-    const userid = await getUserInfo(token)
+  const userid = await getUserInfo(token);
 
-    try {
-        const query = `
+  try {
+    const query = `
         WITH cte AS (
             SELECT
                 to_account AS vpa,
@@ -87,30 +85,29 @@ export async function getVpaData(token,month) {
         ORDER BY
             a.totaltxn DESC;
         `;
-        
-        const params = [userid.id,month];
 
-        const res = await client.query(query,params);
-        return res.rows; // Returns an array of monthly data
-        console.log("getVpaData data ->",res.rows)
+    const params = [userid.id, month];
 
-    } catch (err) {
-        console.log(err)
-        console.error("error from the db ",err);
-        return []; // Return an empty array in case of an error
-    } finally {
-        client.release(); // Make sure to release the client back to the pool
-    }
+    const res = await client.query(query, params);
+    return res.rows; // Returns an array of monthly data
+    console.log("getVpaData data ->", res.rows);
+  } catch (err) {
+    console.log(err);
+    console.error("error from the db ", err);
+    return []; // Return an empty array in case of an error
+  } finally {
+    client.release(); // Make sure to release the client back to the pool
+  }
 }
 
-export async function getNonLabeledVpaData(token,month) {
-    const client = await pool.connect();
-    console.log("current month data requested for : ",month)
+export async function getNonLabeledVpaData(token, month) {
+  const client = await pool.connect();
+  console.log("current month data requested for : ", month);
 
-    const userid = await getUserInfo(token)
+  const userid = await getUserInfo(token);
 
-    try {
-        const query = `
+  try {
+    const query = `
         WITH cte AS (
             SELECT
                 to_account AS vpa,
@@ -142,43 +139,84 @@ export async function getNonLabeledVpaData(token,month) {
         ORDER BY
             a.totaltxn DESC;
         `;
-        
-        const params = [userid.id,month];
 
-        const res = await client.query(query,params);
-        return res.rows; // Returns an array of monthly data
-        console.log("getVpaData data ->",res.rows)
+    const params = [userid.id, month];
 
-    } catch (err) {
-        console.log(err)
-        console.error("error from the db ",err);
-        return []; // Return an empty array in case of an error
-    } finally {
-        client.release(); // Make sure to release the client back to the pool
-    }
+    const res = await client.query(query, params);
+    return res.rows; // Returns an array of monthly data
+    console.log("getVpaData data ->", res.rows);
+  } catch (err) {
+    console.log(err);
+    console.error("error from the db ", err);
+    return []; // Return an empty array in case of an error
+  } finally {
+    client.release(); // Make sure to release the client back to the pool
+  }
 }
 
 export async function getUniqueVpa(token) {
-    const client = await pool.connect();
+  const client = await pool.connect();
 
-    const userid = await getUserInfo(token)
+  const userid = await getUserInfo(token);
 
-    try {
-        const query = `
+  try {
+    const query = `
         select Distinct(LABEL) from vpa_label_pocket_dbos  where user_id = $1 order by label 
         `;
-        
-        const params = [userid.id];
 
-        const res = await client.query(query,params);
-        return res.rows; // Returns an array of monthly data
-        console.log("getVpaData data ->",res.rows)
+    const params = [userid.id];
 
-    } catch (err) {
-        console.log(err)
-        console.error("error from the db ",err);
-        return []; // Return an empty array in case of an error
-    } finally {
-        client.release(); // Make sure to release the client back to the pool
-    }
+    const res = await client.query(query, params);
+    return res.rows; // Returns an array of monthly data
+    console.log("getVpaData data ->", res.rows);
+  } catch (err) {
+    console.log(err);
+    console.error("error from the db ", err);
+    return []; // Return an empty array in case of an error
+  } finally {
+    client.release(); // Make sure to release the client back to the pool
+  }
+}
+
+export async function getRecentTransaction(token, month) {
+  const client = await pool.connect();
+  console.log("current month data requested for : ", month);
+
+  const userid = await getUserInfo(token);
+
+  try {
+    const query = `
+        with cte as (select transaction_id as key, user_id as userid, to_account as vpa,amount_debited as amount,e_time as duration ,TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month from b64decoded_responses) 
+        SELECT
+        a.key,
+            a.vpa,
+            a.amount,
+            a.duration,
+            b.label,
+            b.pocket
+        FROM
+            cte a
+            LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
+        WHERE
+
+            a.month = $2
+            AND a.userid = $1
+            AND a.vpa != 'None'
+
+        ORDER BY
+            a.duration DESC
+        `;
+
+    const params = [userid.id, month];
+
+    const res = await client.query(query, params);
+    return res.rows; // Returns an array of monthly data
+    console.log("getVpaData data ->", res.rows);
+  } catch (err) {
+    console.log(err);
+    console.error("error from the db ", err);
+    return []; // Return an empty array in case of an error
+  } finally {
+    client.release(); // Make sure to release the client back to the pool
+  }
 }

@@ -59,3 +59,17 @@ export function getUniqueVpaData(token){
          .catch(error => console.error(error));
 
 } 
+
+export function getRecentTransactionData(token,currentMonth){
+    
+    return    axios.get(`http://localhost:3000/api/chart/getRecentTransaction?month=${currentMonth}`,{
+         headers: {           
+             'Content-Type': 'application/json',
+             'token' :  token
+         },        
+     })
+     .then(response => response.data
+     )
+         .catch(error => console.error(error));
+
+} 

@@ -1,4 +1,6 @@
 "use client"
+/* eslint-disable no-console, no-alert */
+
 
 import React from 'react';
 

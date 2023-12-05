@@ -1,3 +1,5 @@
+/* eslint-disable no-console, no-alert */
+
 "use client";
 import { FetchVPALabelPocketMap, UpdatePocketsMapping } from "@/app/util/apiCallers/FetchSyncWorker";
 import {

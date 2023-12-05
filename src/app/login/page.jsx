@@ -5,8 +5,9 @@ import "./SignIn.css"
 import { GoogleOutlined } from '@ant-design/icons';
 import { Card,Flex,Theme,Heading, AspectRatio,Button,Text,ThemePanel,Box,Grid, Container} from '@radix-ui/themes'
 import { signIn } from '../util/apiCallers/Google';
-export default () => (
-  <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
+export default function SignIn(){
+ return (
+    <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
      {/* <Flex direction="column" gap="2">
       <Text>Hello from Radix Themes :)</Text>
       <Button>Let's go</Button>
@@ -41,3 +42,5 @@ export default () => (
 
   </Theme>
 )
+}
+  

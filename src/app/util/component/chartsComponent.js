@@ -280,6 +280,8 @@ export function PocketDataChart({ aggdata }) {
     );
   };
 
+  console.log("The pocket data inside the component is :",aggdata)
+
   return (
     <Card className="max-w-md  md:max-w-auto">
       <Flex flexDirection="col" className=" gap-5  ">

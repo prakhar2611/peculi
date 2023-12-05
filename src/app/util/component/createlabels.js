@@ -1,3 +1,5 @@
+/* eslint-disable no-console, no-alert */
+
 "use client"
 import { CloseCircleFilled, CloseCircleOutlined, PlusCircleFilled } from "@ant-design/icons"
 import { Button, Card, Input } from "antd"

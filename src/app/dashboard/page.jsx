@@ -62,6 +62,7 @@ export default function FetchByVPA() {
       }
     );
   }, []);
+  var pData = null
 
   useEffect(() => {
     if (selectedMonth.month != "") {
@@ -70,7 +71,8 @@ export default function FetchByVPA() {
         (res) => {
           setVpaData(res.data);
           setVpaDatafetched(true);
-          constructPocketData(res.data);
+          // setpocketData()
+          
         },
         (err) => {
           alert(err);
@@ -149,10 +151,12 @@ export default function FetchByVPA() {
           pData[element.pocket][element.label] = element.totalamount;
         }
       }
-      setpocketData(pData);
+      return (pData);
     }
   }
 
+  
+  
   console.log("Monthly Data chart : ", data);
   console.log("VPA Data chart : ", vpaData);
 
@@ -162,7 +166,7 @@ export default function FetchByVPA() {
   console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
   console.log("on non labled vpa clicked change : ", slectedNonLabledVpa);
 
-  console.log("Pocket Data : ", pocketData);
+  console.log("Pocket Data : ", pData);
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -204,7 +208,7 @@ export default function FetchByVPA() {
         ) : (
           <></>
         )}
-        {isVpaDatafetched ? <PocketDataChart aggdata={pocketData} /> : <></>}
+        {isVpaDatafetched ? <PocketDataChart aggdata={constructPocketData(vpaData)} /> : <></>}
         <Card className="max-w-md  md:max-w-auto">
           <Title>Tetsing</Title>
         </Card>

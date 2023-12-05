@@ -1,4 +1,7 @@
+/* eslint-disable no-console, no-alert */
+
 "use client";
+
 
 import { BulbTwoTone } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
@@ -35,7 +38,7 @@ export default function ConfigurePage() {
 const [isShowing, setisShowing] = useState(true)
 
 
-const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
+// const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
 const [curr,setcurrcomp] = useState(0)
 const [next,setnextcomp] = useState(1)
 const [activeComponentIndex, setActiveComponentIndex] = useState(1);

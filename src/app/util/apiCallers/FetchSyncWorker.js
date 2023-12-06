@@ -1,7 +1,7 @@
 
 import axios from 'axios'
 
-const serverurl = 'http://localhost:9005/'
+export const serverurl = 'http://localhost:9005/'
 
 
 

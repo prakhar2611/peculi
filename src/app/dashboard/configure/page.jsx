@@ -153,10 +153,10 @@ const prevComponent = () => {
 };
 
 const components = [
-  <Welcome/>,
-   <ConfigureBankBlock/>,
-   <ConfigureVPABlock/>,
-   <ConfigurePocketsBlock/>
+  <Welcome key={0}/>,
+   <ConfigureBankBlock  key={1}/>,
+   <ConfigureVPABlock  key={2}/>,
+   <ConfigurePocketsBlock  key={3}/>
 ];
 
   return(

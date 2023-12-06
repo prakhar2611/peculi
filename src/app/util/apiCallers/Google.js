@@ -1,4 +1,5 @@
 import axios from "axios";
+import { serverurl } from "./FetchSyncWorker";
 
 
 
@@ -37,7 +38,6 @@ export function signIn() {
 
 
   export function getuserDetails() {
-    const serverurl = "http://localhost:9005/"
 
     return(
       axios.get(serverurl+`api/User/v1/GetUserProfile`,{

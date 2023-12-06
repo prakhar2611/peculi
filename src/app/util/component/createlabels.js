@@ -32,7 +32,7 @@ export default function CreateLabels() {
         return(
             <div className="grid grid-cols-2 p-2 gap-2 place-content-center ">
             {data.map((item,index)=> (
-                <div className={`flex gap-1`}>
+                <div key={index} className={`flex gap-1`}>
                     <Card className={`flex wd-2 h-10 items-center`}> {item} </Card>
                 <CloseCircleOutlined className="self-start" onClick={() =>{deleteItem(item)}} />
 

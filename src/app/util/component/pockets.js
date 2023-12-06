@@ -16,7 +16,7 @@ function CreatePockets({data}) {
     return(
         <div className={`grid grid-cols-2 gap-2 justify-items-center`}>
             {data.map((item,index)=>(
-                  <Card bordered={false}>
+                  <Card key={index} bordered={false}>
                   <Statistic
                     title={item}
                     value={11.28}

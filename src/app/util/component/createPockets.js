@@ -153,7 +153,7 @@ export default function CreatePockets() {
     return (
       <div className="grid grid-row-2 p-2 gap-2 place-items-stretch  ">
         {Object.keys(pocketsNew_1).map((key) => (
-          <div
+          <div key={key}
             className={`flex gap-1 w-auto justify-around place-items-center`}
           >
             <Pocket

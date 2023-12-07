@@ -1,8 +1,10 @@
 import axios from 'axios'
 
+export const inappserver = "http://localhost:3000/"
+
 export function getMonthlyChartData(token){
  
-         return    axios.get(`http://localhost:3000/api/chart/getmonthlydata`,{
+         return    axios.get(inappserver+`api/chart/getmonthlydata`,{
               headers: {           
                   'Content-Type': 'application/json',
                   'token' :  token
@@ -19,7 +21,7 @@ export function getMonthlyChartData(token){
   export function getVpaChartData(token,currentMonth){
     console.log("vpa data requested for" ,currentMonth)
     
-    return    axios.get(`http://localhost:3000/api/chart/getvpadata?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getvpadata?month=${currentMonth}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token
@@ -34,7 +36,7 @@ export function getMonthlyChartData(token){
 export function getNonLabeledVpaChartData(token,currentMonth){
     console.log("vpa data requested for" ,currentMonth)
     
-    return    axios.get(`http://localhost:3000/api/chart/getNonLabeledvpadata?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getNonLabeledvpadata?month=${currentMonth}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token
@@ -48,7 +50,7 @@ export function getNonLabeledVpaChartData(token,currentMonth){
 
 export function getUniqueVpaData(token){
     
-    return    axios.get(`http://localhost:3000/api/chart/getUniqueVpa`,{
+    return    axios.get(inappserver+`api/chart/getUniqueVpa`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token
@@ -62,7 +64,7 @@ export function getUniqueVpaData(token){
 
 export function getRecentTransactionData(token,currentMonth){
     
-    return    axios.get(`http://localhost:3000/api/chart/getRecentTransaction?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getRecentTransaction?month=${currentMonth}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token

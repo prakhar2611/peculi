@@ -1,8 +1,9 @@
 import axios from 'axios'
 
-export const inappserver = "http://localhost:3000/"
+export const inappserver  = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL
 
 export function getMonthlyChartData(token){
+
  
          return    axios.get(inappserver+`api/chart/getmonthlydata`,{
               headers: {           

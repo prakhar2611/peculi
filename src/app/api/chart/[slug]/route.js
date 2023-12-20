@@ -5,6 +5,8 @@ export async function GET(request, { params }) {
   const token = request.headers.get("token")
   const { searchParams } = new URL(request.url)
   var month = ""
+  console.log("token in the server " , token )
+
 
   let response = null
   switch (slug) {

@@ -13,10 +13,11 @@ import FetchByVPA from "../../util/component/fetchtopvpa";
 import Pockets from "../../util/component/pockets";
 import { useState } from "react";
 import { SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
+import { getCookie } from "cookies-next";
 
 
 function sync() {
-  var token = sessionStorage.getItem('access_token');
+  var token = getCookie("token")
 
   SyncWorker(token,"","","HDFC").then(
     (apiresp) => {

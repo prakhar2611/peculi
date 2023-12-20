@@ -4,8 +4,11 @@ import '@radix-ui/themes/styles.css';
 import "./SignIn.css"
 import { GoogleOutlined } from '@ant-design/icons';
 import { Card,Flex,Theme,Heading, AspectRatio,Button,Text,ThemePanel,Box,Grid, Container} from '@radix-ui/themes'
-import { signIn } from '../util/apiCallers/Google';
+import { signIn, signOut, useSession } from "next-auth/react";
+
 export default function SignIn(){
+
+  
  return (
     <Theme accentColor="blue" grayColor="sand" radius="large" scaling="95%">
      {/* <Flex direction="column" gap="2">
@@ -29,7 +32,7 @@ export default function SignIn(){
             <Text mb="2">Best UX using Lexical Based Editor.</Text>
           <div>
               <Heading mb="2" size="3">Lets Start</Heading>
-              <Button onClick={signIn}> 
+              <Button onClick={()=>{signIn()}}> 
                   <GoogleOutlined /> 
                   SignIn
               </Button>

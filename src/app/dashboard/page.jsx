@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import {
   AreaChart,
   Card,
@@ -27,6 +28,7 @@ import {
   VpaDonutChart,
 } from "../util/component/chartsComponent";
 import { Input } from "antd";
+import { getCookie, setCookie } from "cookies-next";
 
 export default function FetchByVPA() {
   const [data, setData] = useState(null);
@@ -47,8 +49,25 @@ export default function FetchByVPA() {
 
   const [recentTransaction, setRecentTransaction]  = useState(null);
 
-  const token = sessionStorage.getItem("access_token");
+//   var token = ""
+// const {data : session} = useSession()
+// debugger
+// if(session && session.access_token) {
+//  token = session.access_token
+//  console.log("current session",session)
+// }
 
+
+// const { data: session, status } = useSession()
+
+// if (status === "authenticated") {
+//   setCookie("token",session.accessToken)
+
+// }
+const token = getCookie("token")
+
+
+// token = getCookie("at")
   useEffect(() => {
     getMonthlyChartData(token).then(
       (res) => {
@@ -61,11 +80,12 @@ export default function FetchByVPA() {
         alert(err);
       }
     );
+    
   }, []);
   var pData = null
 
   useEffect(() => {
-    if (selectedMonth.month != "") {
+    if (token!="" && selectedMonth && selectedMonth.month != "") {
       const availableLabel = [];
       getVpaChartData(token, selectedMonth.month).then(
         (res) => {
@@ -157,16 +177,16 @@ export default function FetchByVPA() {
 
   
   
-  console.log("Monthly Data chart : ", data);
-  console.log("VPA Data chart : ", vpaData);
+  // console.log("Monthly Data chart : ", data);
+  // console.log("VPA Data chart : ", vpaData);
 
-  console.log("slected month", selectedMonth);
-  console.log("slected vpa ", slectedVpa);
+  // console.log("slected month", selectedMonth);
+  // console.log("slected vpa ", slectedVpa);
 
-  console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
-  console.log("on non labled vpa clicked change : ", slectedNonLabledVpa);
+  // console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
+  // console.log("on non labled vpa clicked change : ", slectedNonLabledVpa);
 
-  console.log("Pocket Data : ", pData);
+  // console.log("Pocket Data : ", pData);
 
   return (
     <div className="flex flex-col gap-6 ">

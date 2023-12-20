@@ -1,11 +1,13 @@
 
 import axios from 'axios'
+import { getCookie } from 'cookies-next';
 
-export const serverurl = 'http://localhost:9005/'
+export const serverurl = process.env.NEXT_PUBLIC_SERVER_URL
+
+const token = getCookie("access_token")
 
 
-
-export function SyncWorker (token,from,to,label)  {
+export function SyncWorker (from,to,label,token)  {
 
         console.log("Request payload for Syncing data : ", `http://192.168.1.5:9005/SyncMail?label=${label}&to=${to}&from=${from}` )
         const URL = serverurl+`SyncMail?label=${label}&to=${to}&from=${from}`;
@@ -23,7 +25,7 @@ export function SyncWorker (token,from,to,label)  {
             });
 }   
 
-export function FetchWorker(token,from,to,label,callback, errorcallback){
+export function FetchWorker(from,to,label,callback, errorcallback){
     console.log("Request payload for fetching the data : ", `http://192.168.1.5:9005/expense/api/v1/getExpense?from=${from}&to=${to}&label=${label}` )
 
     const URL = serverurl+`expense/api/v1/getExpense?from=${from}&to=${to}&label=${label}`;
@@ -41,7 +43,7 @@ export function FetchWorker(token,from,to,label,callback, errorcallback){
 
 }
 
-export function UpdateVPAMapping(p,token){
+export function UpdateVPAMapping(p){
   console.log("update payload :",p);
   return axios.post(serverurl+'expense/api/v1/UpdateVpaMapping', JSON.stringify(p),{
       headers: {
@@ -55,7 +57,7 @@ export function UpdateVPAMapping(p,token){
     });     
 }
 
-export function FetchGroupedVPA(limit,offset,token,type="CONFIGURE"){
+export function FetchGroupedVPA(limit,offset,type="CONFIGURE"){
  
   console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getXpnsByVpa` )
 
@@ -72,7 +74,7 @@ export function FetchGroupedVPA(limit,offset,token,type="CONFIGURE"){
  
 }
 
-export function FetchVPALabelPocketMap(token){
+export function FetchVPALabelPocketMap(){
  
   console.log("Request payload for fetching the data : ", +`http://localhost:9005/expense/api/v1/getVpaLabelPocketMapping` )
 
@@ -90,7 +92,7 @@ export function FetchVPALabelPocketMap(token){
 }
 
 
-export function UpdatePocketsMapping(p,token){
+export function UpdatePocketsMapping(p){
   Object.keys(p).map((key) => {
     p[key] = Array.from(p[key])
   })
@@ -113,7 +115,7 @@ export function UpdatePocketsMapping(p,token){
 }
 
 
-export function updateSplitTransaction(p,token){
+export function updateSplitTransaction(p){
  
   const payload = {
     data : p.Transactions,

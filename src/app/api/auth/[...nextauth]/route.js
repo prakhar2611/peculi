@@ -3,6 +3,7 @@ import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 const serverurl = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL
 import { cookies } from 'next/headers';
+import { env } from "../../../../../next.config";
 
 
 const handler = NextAuth({
@@ -21,6 +22,7 @@ const handler = NextAuth({
       }
     }),
   ],
+  secret : process.env.NEXT_PUBLIC_SECRET,
   session: {
     strategy: "jwt" ,
     maxAge: 3 * 24 * 60 * 60,

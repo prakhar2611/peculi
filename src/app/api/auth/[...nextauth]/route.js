@@ -1,7 +1,7 @@
 import { getCookie, setCookie } from "cookies-next";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
-const serverurl = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL
+// const serverurl = process.env.NEXTAUTH_URL
 import { cookies } from 'next/headers';
 import { env } from "../../../../../next.config";
 
@@ -16,7 +16,7 @@ const handler = NextAuth({
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
-          'redirect_uri': serverurl+'api/auth/callback/google',
+          // 'redirect_uri': serverurl+'api/auth/callback/google',
                 scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/userinfo.email',
 
                 

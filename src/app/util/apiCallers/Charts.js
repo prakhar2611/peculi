@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const inappserver  = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL
+export const inappserver  = process.env.NEXT_PUBLIC_APP
 
 export function getMonthlyChartData(token){
 

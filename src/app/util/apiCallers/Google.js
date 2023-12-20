@@ -5,7 +5,7 @@ import { serverurl } from "./FetchSyncWorker";
 
 
 export function signIn() {
-  const serverurl = process.env.NEXT_PUBLIC_GOOGLE_CALLBACK_URL
+  const serverurl = process.env.NEXT_PUBLIC_APP
 
 
     var oauth2Endpoint = 'https://accounts.google.com/o/oauth2/v2/auth';

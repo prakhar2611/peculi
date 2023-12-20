@@ -16,7 +16,9 @@ const handler = NextAuth({
           prompt: "consent",
           access_type: "offline",
           response_type: "code",
+          'redirect_uri': serverurl+'api/auth/callback/google',
                 scope: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/userinfo.email',
+
                 
         }
       }

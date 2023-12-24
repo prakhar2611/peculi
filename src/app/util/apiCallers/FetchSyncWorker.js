@@ -7,7 +7,7 @@ export const serverurl = process.env.NEXT_PUBLIC_SERVER_URL
 const token = getCookie("access_token")
 
 
-export function SyncWorker (from,to,label,token)  {
+export function SyncWorker (token,from,to,label)  {
 
         console.log("Request payload for Syncing data : ", `http://192.168.1.5:9005/SyncMail?label=${label}&to=${to}&from=${from}` )
         const URL = serverurl+`SyncMail?label=${label}&to=${to}&from=${from}`;

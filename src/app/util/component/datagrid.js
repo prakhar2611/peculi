@@ -56,12 +56,11 @@
 
           
             //calling server to update the category
-            var token = sessionStorage.getItem('access_token');
             const p = {
                 'data' : payload
             }
 
-            UpdateVPAMapping(p,token).then((res) => {
+            UpdateVPAMapping(p).then((res) => {
               setTimeout(messageApi.destroy, 1500);
               console.log("reposne data " , res)
             },(err) => {

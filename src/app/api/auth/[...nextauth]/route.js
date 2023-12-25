@@ -4,6 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 // const serverurl = process.env.NEXTAUTH_URL
 import { cookies } from 'next/headers';
 import { env } from "../../../../../next.config";
+import axios from "axios";
+import { serverurl } from "@/app/util/apiCallers/FetchSyncWorker";
 
 
 const handler = NextAuth({
@@ -30,6 +32,7 @@ const handler = NextAuth({
     maxAge: 3 * 24 * 60 * 60,
   },
   callbacks: {
+    
 
     async jwt({ token, account, profile }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
@@ -44,16 +47,34 @@ const handler = NextAuth({
       // Send properties to the client, like an access_token and user id from a provider.
       session.accessToken = token.accessToken
       session.user.id = token.id
-      setCookie("token" , session.accessToken, {cookies})
+      setCookie("access_token" , session.accessToken, {cookies})
 
       session.expires = token.expires_at
+      var data = {
+                access_token : token.accessToken,
+            }
+
+        
+      axios.post(serverurl+'expense/api/User/v1/Signin', JSON.stringify(data),{
+                headers: {
+                    'Content-Type': 'application/json',
+                 },
+            })
+              .then(response => {
+                console.log(response.data);
+                if (response.data.status == true) {
+                  
+                }
+              })
+              .catch(error => {
+                console.error(error);
+              })
 
 
       // console.log("cookies - ",getCookie("at"))
       
       return session
-    }
-  }
+    }  }
 });
 
 export { handler as GET, handler as POST };

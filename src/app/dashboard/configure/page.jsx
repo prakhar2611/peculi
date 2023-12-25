@@ -6,7 +6,7 @@
 import { BulbTwoTone } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
 import { Button, IconButton } from "@radix-ui/themes";
-import { Select } from "antd";
+import { Select, Spin } from "antd";
 import CreateLabels from "../../util/component/createlabels";
 import CreatePockets from "../../util/component/createPockets";
 import FetchByVPA from "../../util/component/fetchtopvpa";
@@ -16,9 +16,20 @@ import { SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
 import { getCookie } from "cookies-next";
 
 
+
+export default function ConfigurePage() {
+
+
+// const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
+const [curr,setcurrcomp] = useState(0)
+const [next,setnextcomp] = useState(1)
+const [activeComponentIndex, setActiveComponentIndex] = useState(1);
+const [isFadingOut, setIsFadingOut] = useState(false);
+
+
+
 function sync() {
   var token = getCookie("token")
-
   SyncWorker(token,"","","HDFC").then(
     (apiresp) => {
       Object.keys(apiresp).forEach((key) => {
@@ -33,18 +44,8 @@ function sync() {
       alert(err);
     }
   );
+
 }
-
-export default function ConfigurePage() {
-const [isShowing, setisShowing] = useState(true)
-
-
-// const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
-const [curr,setcurrcomp] = useState(0)
-const [next,setnextcomp] = useState(1)
-const [activeComponentIndex, setActiveComponentIndex] = useState(1);
-const [isFadingOut, setIsFadingOut] = useState(false);
-
 
 function Welcome() {
   return( 
@@ -161,6 +162,7 @@ const components = [
 ];
 
   return(
+
     <div className={`flex flex-col place-items-center gap-8
     `}>
 
@@ -169,10 +171,11 @@ const components = [
             <Button  className={`shadow-md w-20 self-center `} onClick={nextComponent}>Forward</Button>
           </div>
             
-
+           
             <div className={` min-w-[20vh] transition-opacity duration-500 ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
                 {components[activeComponentIndex - 1]}
             </div>
+
         </div>
   );
 }

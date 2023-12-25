@@ -64,11 +64,11 @@ export default function FetchByVPA() {
 //   setCookie("token",session.accessToken)
 
 // }
-const token = getCookie("token")
+const token = getCookie("access_token")
 
 
 // token = getCookie("at")
-  useEffect(() => {
+  useEffect(() => {     
     getMonthlyChartData(token).then(
       (res) => {
         if (res.data != null) {

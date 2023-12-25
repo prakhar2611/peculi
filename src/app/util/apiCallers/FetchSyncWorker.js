@@ -10,7 +10,7 @@ const token = getCookie("access_token")
 export function SyncWorker (token,from,to,label)  {
 
         console.log("Request payload for Syncing data : ", `http://192.168.1.5:9005/SyncMail?label=${label}&to=${to}&from=${from}` )
-        const URL = serverurl+`SyncMail?label=${label}&to=${to}&from=${from}`;
+        const URL = serverurl+`expense/api/SyncMail?label=${label}&to=${to}&from=${from}`;
 
         return axios(URL, {
             method: 'GET',

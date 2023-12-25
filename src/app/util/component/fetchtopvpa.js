@@ -21,11 +21,9 @@ export default function FetchByVPA (){
   var [limit,setlimit] = useState(10)
   var [offset,setoffset] = useState(0)
 
-  const token = sessionStorage.getItem('access_token');
-
   
   useEffect( () => {
-    FetchGroupedVPA(limit,offset,token).then((res) => {
+    FetchGroupedVPA(limit,offset).then((res) => {
         console.log("reposne data " , res)
         setdata(res)
       },(err) => {

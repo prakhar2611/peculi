@@ -13,7 +13,6 @@ import { useState, useEffect } from "react";
 
 
 export default function CreatePockets() {
-  const token = sessionStorage.getItem("access_token");
   const [messageApi, contextHolder] = message.useMessage();
 
 
@@ -31,7 +30,7 @@ export default function CreatePockets() {
   const [isnewPocket, setisnewPocket] = useState(false);
 
   useEffect(() => {
-    FetchVPALabelPocketMap(token).then(
+    FetchVPALabelPocketMap().then(
       (apiresp) => {
         Object.keys(apiresp).forEach((key) => {
           if (key == "Pockets") {
@@ -70,7 +69,7 @@ export default function CreatePockets() {
   //#region Componet Internal Methods
 
   function handleSave() {
-    UpdatePocketsMapping(pocketsNew_1,token).then((res) => {
+    UpdatePocketsMapping(pocketsNew_1).then((res) => {
         setTimeout(messageApi.destroy, 1500);
         console.log("reposne data " , res)
       },(err) => {

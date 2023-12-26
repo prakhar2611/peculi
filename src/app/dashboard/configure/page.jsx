@@ -29,7 +29,7 @@ const [isFadingOut, setIsFadingOut] = useState(false);
 
 
 function sync() {
-  var token = getCookie("token")
+  var token = getCookie("access_token")
   SyncWorker(token,"","","HDFC").then(
     (apiresp) => {
       Object.keys(apiresp).forEach((key) => {

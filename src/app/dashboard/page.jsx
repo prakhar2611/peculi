@@ -229,12 +229,12 @@ const token = getCookie("access_token")
           <></>
         )}
         {isVpaDatafetched ? <PocketDataChart aggdata={constructPocketData(vpaData)} /> : <></>}
-        <Card className="max-w-md  md:max-w-auto">
+        {/* <Card className="max-w-sm  md:max-w-auto">
           <Title>Tetsing</Title>
-        </Card>
+        </Card> */}
       </div>
 
-      <div className="flex felx-row gap-3 m-auto place-items-stretch">
+      <div >
         {/* have to call the table for latest transaction for the user in desc time  */}
 
        <TableRecentTransaction data={recentTransaction} />

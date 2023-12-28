@@ -6,6 +6,8 @@ import React from 'react';
 import { ThemeProvider } from "next-themes"
 
 import { useRouter } from 'next/navigation'
+import { ResponsiveMenu } from '../util/component/responsiveMenu';
+import { HeadBar } from '../util/component/headBar';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -41,7 +43,9 @@ export default function Dashboard({children}) {
     return(
       <ThemeProvider attribute="class">
     <Layout>
-      <Sider
+
+     
+      <Sider className='hidden md:block'
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={(broken) => {
@@ -78,13 +82,16 @@ export default function Dashboard({children}) {
 
       </Sider>
 
+      <ResponsiveMenu />
       <Layout>
         <Header
           style={{
             padding: 0,
             background: colorBgContainer,
           }}
-        />
+        >
+          <HeadBar/>
+          </Header>
         
         <Content className=''
           style={{

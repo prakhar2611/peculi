@@ -32,10 +32,10 @@ import { updateSplitTransaction, UpdateVPAMapping } from "../apiCallers/FetchSyn
 
 export function MonthlyDataChart({ data, setMonth }) {
   return (
-    <Card className="max-w-md  md:max-w-auto">
+    <Card className="max-w-sm md:max-w-auto">
       <Title>Monthly Total amount </Title>
       <AreaChart
-        className="h-72S mt-6"
+        className="max-w-sm  md:h-72S mt-6"
         data={data}
         index="month"
         categories={["amount"]}
@@ -93,7 +93,7 @@ export function VpaDonutChart({ data, onVpaValueChange, index, title }) {
 
   // console.log("barchart data  :-",barchartdata)
   return (
-    <Card className="max-w-md  md:max-w-auto">
+    <Card className=" max-w-sm  md:max-w-auto">
       <Title>
         {title} : {data?.length}{" "}
       </Title>
@@ -117,8 +117,7 @@ className="mt-2"
 
 export function ChartInfo({ totalAmount, currentMonth }) {
   return (
-    <div>
-      <Card className="max-w-md  md:max-w-auto gap-2">
+      <Card className="max-w-sm  md:max-w-auto gap-2">
         <Text> Total spend for month : {currentMonth} </Text>
         <Metric>₹ {totalAmount}</Metric>
         <Callout
@@ -140,7 +139,6 @@ export function ChartInfo({ totalAmount, currentMonth }) {
           current Month data hover over donut to view data.
         </Callout>
       </Card>
-    </div>
   );
 }
 
@@ -180,7 +178,7 @@ export function NonLabeledVpaChart({
   console.log("Available label : ", availableLabel);
 
   return (
-    <Card className="max-w-md  md:max-w-auto">
+    <Card className="max-w-sm flex flex-col md:max-w-auto gap-6">
       <VpaDonutChart
         data={data}
         onVpaValueChange={onVpaValueChange}
@@ -188,15 +186,12 @@ export function NonLabeledVpaChart({
         title={title}
       />
 
-      <Card>
-        <div className="flex items-center justify-between space-x-8">
-          <p className="text-right text-tremor-content whitespace-nowrap max-w-[20vh]">
+        <Card className="flex-col gap-4 md:max-w-sm md:flex md:gap-2">
+          <Text >
             {slectedNonLabledVpa?.vpa}
-          </p>
+          </Text>
           <AutoComplete
-            style={{
-              width: 200,
-            }}
+           className="max-w-sm md:max-w-auto"
             options={availableLabel}
             placeholder="try to type `b`"
             filterOption={(inputValue, option) =>
@@ -210,8 +205,7 @@ export function NonLabeledVpaChart({
           <ArrowRightOutlined
             onClick={() => updateLabel(slectedNonLabledVpa?.vpa)}
           />
-        </div>
-      </Card>
+        </Card>
     </Card>
   );
 }
@@ -283,7 +277,7 @@ export function PocketDataChart({ aggdata }) {
   console.log("The pocket data inside the component is :",aggdata)
 
   return (
-    <Card className="max-w-md  md:max-w-auto">
+    <Card className="max-w-sm  md:max-w-auto">
       <Flex flexDirection="col" className=" gap-5  ">
         <Flex>
           <Button
@@ -330,10 +324,12 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
     {
       title: "Label",
       dataIndex: "label",
+      responsive: ['lg'],
     },
     {
       title: "Pocket",
       dataIndex: "pocket",
+      responsive: ['lg'],
     },
   ];
 
@@ -422,7 +418,7 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
  
 
   return (
-    <Card className="max-w-md  md:min-w-[180vh] md:place-content-stretch">
+    <Card className="max-w-max  md:min-w-[180vh] md:place-content-stretch">
       <div className="flex gap-6">
         <Title>Recent Transactions</Title>
         <Popover
@@ -437,8 +433,8 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
           </Button>
         </Popover>
       </div>
-
-      <Table
+<Flex className=" scroll-m-0 overflow-scroll ">
+<Table size="small"
         rowSelection={{
           type: "checkbox",
           ...rowSelection,
@@ -447,6 +443,8 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
         dataSource={data}
         pagination={true}
       />
+</Flex>
+     
     </Card>
   );
 }

@@ -87,7 +87,7 @@ export default function Dashboard({children}) {
         <Header
           style={{
             padding: 0,
-            background: colorBgContainer,
+            background: '#251D1C',
           }}
         >
           <HeadBar/>
@@ -98,7 +98,7 @@ export default function Dashboard({children}) {
             margin: '24px 16px 0',
           }}
         >
-          <div  className='bg-white dark:bg-slate-400 dark:'
+          <div  
             style={{
               padding: 24,
               minHeight: 900,

@@ -9,17 +9,20 @@ import {
   Bold,
   Flex,
 } from "@tremor/react";
-import { DonutChart } from "@tremor/react";
+import { DonutChart,Button,Icon } from "@tremor/react";
 import { useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon, MailIcon, PaperAirplaneIcon, PlusCircleIcon, ScissorsIcon } from "@heroicons/react/solid";
+
 import {
   ArrowCircleRightIcon,
+  ArrowLeftIcon,
   CheckCircleIcon,
   ExclamationIcon,
   LightBulbIcon,
 } from "@heroicons/react/solid";
 import {
   AutoComplete,
-  Button,
+
   Input,
   Divider,
   Radio,
@@ -27,7 +30,7 @@ import {
   Popover,
   Select,
 } from "antd";
-import { ArrowRightOutlined, SplitCellsOutlined } from "@ant-design/icons";
+import { ArrowRightOutlined, DingtalkCircleFilled, LeftCircleFilled, SplitCellsOutlined } from "@ant-design/icons";
 import { updateSplitTransaction, UpdateVPAMapping } from "../apiCallers/FetchSyncWorker";
 
 export function MonthlyDataChart({ data, setMonth }) {
@@ -186,10 +189,10 @@ export function NonLabeledVpaChart({
         title={title}
       />
 
-        <Card className="flex-col gap-4 md:max-w-sm md:flex md:gap-2">
-          <Text >
+        <div className="flex-col place-item-center gap-4 md:max-w-sm md:flex md:gap-2 ">
+          <Title >
             {slectedNonLabledVpa?.vpa}
-          </Text>
+          </Title>
           <AutoComplete
            className="max-w-sm md:max-w-auto"
             options={availableLabel}
@@ -202,10 +205,16 @@ export function NonLabeledVpaChart({
             value={label}
           />
           {/* <Input title="Enter label" value={label} onChange={(e) => setLabel(e.target.value)}  /> */}
-          <ArrowRightOutlined
+          <Icon 
+          size="md"
+            icon={PlusCircleIcon}
             onClick={() => updateLabel(slectedNonLabledVpa?.vpa)}
-          />
-        </Card>
+            >
+
+          </Icon>
+
+         
+        </div>
     </Card>
   );
 }
@@ -280,18 +289,21 @@ export function PocketDataChart({ aggdata }) {
     <Card className="max-w-sm  md:max-w-auto">
       <Flex flexDirection="col" className=" gap-5  ">
         <Flex>
-          <Button
-            className={`shadow-md w-20 self-center `}
+          <Icon 
+          size="lg"
+            icon={ChevronLeftIcon}
             onClick={prevComponent}
           >
             Backward
-          </Button>
-          <Button
-            className={`shadow-md w-20 self-center `}
+          </Icon>
+          <Icon 
+          size="lg"
+          icon={ChevronRightIcon}
+
             onClick={nextComponent}
           >
             Forward
-          </Button>
+          </Icon>
         </Flex>
 
         <Flex
@@ -428,9 +440,7 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
           open={open}
           onOpenChange={handleOpenChange}
         >
-          <Button icon={<SplitCellsOutlined />} size="small">
-            Split
-          </Button>
+         <Icon icon={ScissorsIcon} tooltip="Click to split Transaction" /> 
         </Popover>
       </div>
 <Flex className=" scroll-m-0 overflow-scroll ">

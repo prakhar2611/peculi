@@ -5,7 +5,7 @@
 
 import { BulbTwoTone } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
-import { Button, IconButton } from "@radix-ui/themes";
+import {  IconButton } from "@radix-ui/themes";
 import { Select, Spin } from "antd";
 import CreateLabels from "../../util/component/createlabels";
 import CreatePockets from "../../util/component/createPockets";
@@ -14,6 +14,7 @@ import Pockets from "../../util/component/pockets";
 import { useState } from "react";
 import { SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
 import { getCookie } from "cookies-next";
+import { Card,Button, Text, Title, Subtitle } from "@tremor/react";
 
 
 
@@ -50,21 +51,24 @@ function sync() {
 function Welcome() {
   return( 
     <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
-    <h1 className={`mb-3 text-4xl font-semibold`}>Start Configuring</h1>
-  <p className={`m-0 max-w-[40ch] text-xl`}>
+    <Title >Start Configuring</Title>
+  <Text >
     Configure your own VPA Labels and Pockets.
-  </p>
+  </Text>
+  <Subtitle>
+    Start sync your mail by going to next slide and select your bank.
+  </Subtitle>
 </div>)
 }
 
   function ConfigureBankBlock() {
     return (
       <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
-        <h2 className={` text-2xl font-semibold`}>Choose Your Bank</h2>
-        <p className={`m-0 max-w-[40ch] text-s dark:text-stone-900 `}>
+        <Title >Choose Your Bank</Title>
+        <Text >
           Select Bank from below which will have gmail support for all your
           spendings.
-        </p>
+        </Text>
         <Select
           className={`w-2/3 m-5 self-center`}
           options={[
@@ -80,11 +84,11 @@ function Welcome() {
   function WhatArePockets() {
     return (
       <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
-        <h2 className={`text-2xl font-semibold`}>What are Pockets?</h2>
-        <p className={`m-0 max-w-[40ch] text-s `}>
+        <Title >What are Pockets?</Title>
+        <Text>
           Pockets are the fundamental blocks to trace your exense and saving
           like 'Gullak' Below are your currently configured Pockets.
-        </p>
+        </Text>
         <Pockets />
       </div>
     );
@@ -93,13 +97,13 @@ function Welcome() {
   function ConfigureVPABlock() {
     return (
       <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
-        <h1 className={`text-2xl font-semibold`}>Configure your own labels</h1>
-        <p className={`max-w-[40ch] text-s `}>
+        <Title >Configure your own labels</Title>
+        <Text >
           These are the building blocks for assinging your transactions. you can
           think it as classification of you vpas into one small category. For eg
           : Swiggy@paytm and Swiggy@axis is a VPA you can map it to your swiggy
           label.
-        </p>
+        </Text>
         <FetchByVPA  />
       </div>
     );
@@ -108,15 +112,15 @@ function Welcome() {
   function ConfigurePocketsBlock() {
     return (
       <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
-        <h1 className={` text-2xl font-semibold`}>
+        <Title>
           Configure your Pockets
-        </h1>
-        <p className={`m-0 max-w-[40ch] text-m `}>
+        </Title>
+        <Text >
           Configure your own pockets. These pockets are the keys to visualize
           your expenses and saving. These pockets will be available to map to
           your VPA(s). For eg : Swiggy@paytm is a VPA you can map it to your
           FOOD pocket.
-        </p>
+        </Text>
         <CreatePockets />
       </div>
     );
@@ -163,7 +167,7 @@ const components = [
 
   return(
 
-    <div className={`flex flex-col place-items-center gap-8
+    <Card className={`flex flex-col place-items-center gap-8
     `}>
 
           <div className="flex max-h-[5vh] gap-7 ">
@@ -176,6 +180,6 @@ const components = [
                 {components[activeComponentIndex - 1]}
             </div>
 
-        </div>
+        </Card>
   );
 }

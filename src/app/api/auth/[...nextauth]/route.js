@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import { env } from "../../../../../next.config";
 import axios from "axios";
 import { serverurl } from "@/app/util/apiCallers/FetchSyncWorker";
+import Link from 'next/link'
 
 
 const handler = NextAuth({
@@ -63,17 +64,16 @@ const handler = NextAuth({
               .then(response => {
                 console.log(response.data);
                 if (response.data.status == true) {
-                  
+                 return <Link href="/dashboard">Dashboard</Link>
                 }
               })
               .catch(error => {
                 console.error(error);
               })
 
-
+ 
       // console.log("cookies - ",getCookie("at"))
-      
-      return session
+      return <Link href="/dashboard">Dashboard</Link>
     }  }
 });
 

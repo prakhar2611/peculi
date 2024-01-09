@@ -29,6 +29,7 @@ import {
   Table,
   Popover,
   Select,
+  message
 } from "antd";
 import { ArrowRightOutlined, DingtalkCircleFilled, LeftCircleFilled, SplitCellsOutlined } from "@ant-design/icons";
 import { updateSplitTransaction, UpdateVPAMapping } from "../apiCallers/FetchSyncWorker";
@@ -170,6 +171,13 @@ export function NonLabeledVpaChart({
 
     UpdateVPAMapping(p, token).then(
       (res) => {
+        if(res.status = true) {
+          message.info('Success !');
+
+        }else{
+          message.info('Failed !');
+
+        }
         console.log("reposne data ", res);
       },
       (err) => {
@@ -194,7 +202,7 @@ export function NonLabeledVpaChart({
             {slectedNonLabledVpa?.vpa}
           </Title>
           <AutoComplete
-           className="max-w-sm md:max-w-auto"
+           className="min-w-[10vh] max-w-sm md:max-w-auto"
             options={availableLabel}
             placeholder="try to type `b`"
             filterOption={(inputValue, option) =>

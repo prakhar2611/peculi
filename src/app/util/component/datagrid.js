@@ -3,30 +3,27 @@
 
 
 
-    import { Space, Table,Button, Tag,Select,Input,message,Pagination} from 'antd';
+    import { Space, Table,Button, Tag,Select,Input,message,Pagination, AutoComplete} from 'antd';
     import { useState, useEffect } from "react";
     import { ColumnProps } from "antd/lib/table";
     import axios from 'axios'
     import {UpdateVPAMapping} from '../apiCallers/FetchSyncWorker'
+import { getCookie } from 'cookies-next';
+import { getUniqueVpaData } from '../apiCallers/Charts';
+import { Flex } from '@tremor/react';
 
 
 
 
 
 
-    export default function Datagrid({isfetched,data}) {
+    export default function Datagrid({isfetched,data,labels}) {
         // for(int i =0; i<length(data) ;)
         // var i
         // for(i=0; i < data.length; i++){
         //    data.key = i+1
         // }
-        const [messageApi, contextHolder] = message.useMessage();
 
-        messageApi.open({
-          type: 'loading',
-          content: 'Action in progress..',
-          duration: 0,
-        });
 
 
         //const [tableData, setTableData] = useState(data);
@@ -35,7 +32,8 @@
         const [disable,setdisable] = useState(true); 
     
 
-
+       
+        
         
         
         const onConfirm = (index) => {
@@ -61,7 +59,14 @@
             }
 
             UpdateVPAMapping(p).then((res) => {
-              setTimeout(messageApi.destroy, 1500);
+              if(res.status = true) {
+                message.info('Success !');
+
+              }else{
+                message.info('Failed !');
+
+              }
+
               console.log("reposne data " , res)
             },(err) => {
               alert(err)
@@ -136,7 +141,17 @@
               dataIndex : 'label',
               key: 'label',
                 render: (text, record) => (
-                  <Input  defaultValue={record.label} onChange={(e) => onInputChange("label", record.vpa,e.target.value)} />
+                  <AutoComplete
+           className="min-w-[15vh] md:max-w-auto"
+            options={labels}
+            placeholder="try to type `b`"
+            filterOption={(inputValue, option) =>
+              option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
+              -1
+            }
+            onChange={(e) => onInputChange("label", record.vpa,e)}
+          />
+                    // <Input  defaultValue={record.label} onChange={(e) => onInputChange("label", record.vpa,e.target.value)} />
                 )
               },
           ];
@@ -145,14 +160,14 @@
             return null
           }
           return (
-        <div className='flex flex-col'>
-            <Table className='flex flex-col  p-10' columns={columns} 
+        <Flex className=' max-w-sm flex flex-col scroll-m-0 overflow-scroll '>
+            <Table size="small" columns={columns} 
             pagination ={false}
             dataSource={data} rowKey={record => record.key}/>
             <Button className=' self-center' type="primary" disabled={disable} loading={loadings[0]} onClick={() => onConfirm(0)}>
                 Submit
             </Button>
-        </div>
+        </Flex>
           );
 
     }

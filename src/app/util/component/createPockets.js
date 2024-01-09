@@ -70,7 +70,11 @@ export default function CreatePockets() {
 
   function handleSave() {
     UpdatePocketsMapping(pocketsNew_1).then((res) => {
-        setTimeout(messageApi.destroy, 1500);
+        if(res.status == true) {
+          message.info('Success !');
+        }else {
+          message.info('Failed !');
+        }
         console.log("reposne data " , res)
       },(err) => {
         alert(err)

@@ -2,11 +2,12 @@
 
 "use client";
 
+import React from 'react';
 
 import { BulbTwoTone } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
 import {  IconButton } from "@radix-ui/themes";
-import { Select, Spin } from "antd";
+import { Select, Spin,message } from "antd";
 import CreateLabels from "../../util/component/createlabels";
 import CreatePockets from "../../util/component/createPockets";
 import FetchByVPA from "../../util/component/fetchtopvpa";
@@ -21,27 +22,30 @@ import { Card,Button, Text, Title, Subtitle } from "@tremor/react";
 export default function ConfigurePage() {
 
 
+
 // const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
 const [curr,setcurrcomp] = useState(0)
 const [next,setnextcomp] = useState(1)
 const [activeComponentIndex, setActiveComponentIndex] = useState(1);
 const [isFadingOut, setIsFadingOut] = useState(false);
 
+var token = getCookie("access_token")
 
 
 function sync() {
-  var token = getCookie("access_token")
   SyncWorker(token,"","","HDFC").then(
     (apiresp) => {
-      Object.keys(apiresp).forEach((key) => {
-        if (key == "Pockets") {
-          setNewPockets_1(apiresp[key]);
-        } else if (key == "Labels") {
-          setlabels(apiresp[key]);
-        }
-      });
+      if (apiresp.status == false){
+        message.info('Sync failed Please Login !');
+      }else {
+          message.info('Account synced!');
+      }
+
+      console.log("Sync response -",apiresp)
+
     },
     (err) => {
+      
       alert(err);
     }
   );
@@ -104,7 +108,7 @@ function Welcome() {
           : Swiggy@paytm and Swiggy@axis is a VPA you can map it to your swiggy
           label.
         </Text>
-        <FetchByVPA  />
+        <FetchByVPA token={token}  />
       </div>
     );
   }

@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import { BulbTwoTone } from "@ant-design/icons";
+import { BulbTwoTone, GoogleCircleFilled } from "@ant-design/icons";
 import { Transition } from "@headlessui/react";
 import {  IconButton } from "@radix-ui/themes";
 import { Select, Spin,message } from "antd";
@@ -13,14 +13,15 @@ import CreatePockets from "../../util/component/createPockets";
 import FetchByVPA from "../../util/component/fetchtopvpa";
 import Pockets from "../../util/component/pockets";
 import { useState } from "react";
-import { SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
+import { SendxlsPayload, SyncWorker } from "@/app/util/apiCallers/FetchSyncWorker";
 import { getCookie } from "cookies-next";
-import { Card,Button, Text, Title, Subtitle } from "@tremor/react";
+import { Card,Button, Text, Title, Subtitle, Icon } from "@tremor/react";
+import UploadFile from '@/app/util/component/uploadFile';
+import { DocumentRemoveIcon, DocumentSearchIcon } from '@heroicons/react/solid';
 
 
 
 export default function ConfigurePage() {
-
 
 
 // const comps = [<Welcome/>,<ConfigureBankBlock/>, <ConfigureVPABlock/>, <WhatArePockets/>,<ConfigurePocketsBlock/>]
@@ -32,25 +33,6 @@ const [isFadingOut, setIsFadingOut] = useState(false);
 var token = getCookie("access_token")
 
 
-function sync() {
-  SyncWorker(token,"","","HDFC").then(
-    (apiresp) => {
-      if (apiresp.status == false){
-        message.info('Sync failed Please Login !');
-      }else {
-          message.info('Account synced!');
-      }
-
-      console.log("Sync response -",apiresp)
-
-    },
-    (err) => {
-      
-      alert(err);
-    }
-  );
-
-}
 
 function Welcome() {
   return( 
@@ -66,6 +48,60 @@ function Welcome() {
 }
 
   function ConfigureBankBlock() {
+
+const [selectedopt, setseletecoption] =useState("")    
+
+const [sheetName , setSheetName] = useState("")
+const [sheetPayload ,setSheetPayload] = useState([])
+
+    function sync() {
+
+      if (sheetPayload.length > 0) {
+        SendxlsPayload(token,sheetPayload,selectedopt).then(
+          (apiresp) => {
+            if (apiresp.status == false){
+              message.info('Sheet Sync failed Please Login !');
+            }else {
+                message.info('Sheet synced!');
+            }
+            console.log("sheet response -",apiresp)
+    
+          }
+        )
+      }else {
+        SyncWorker(token,"","",selectedopt).then(
+          (apiresp) => {
+            if (apiresp.status == false){
+              message.info('Sync failed Please Login !');
+            }else {
+                message.info('Account synced!');
+            }
+      
+            console.log("Sync response -",apiresp)
+      
+          },
+          (err) => {
+            
+            alert(err);
+          }
+        );
+      }
+     
+    
+    }
+    
+    function handlecallback(data,fileName) {
+      setSheetName(fileName)
+      setSheetPayload(data)
+    
+    }
+    console.log("upload is selected with data  ", sheetName,sheetPayload)
+
+    function handleselect (e) {
+      if(e != "")
+      setseletecoption(e)
+    }
+    
     return (
       <div className={`flex gap-2 place-items-center flex-col min-h-[40ch]`}>
         <Title >Choose Your Bank</Title>
@@ -74,13 +110,28 @@ function Welcome() {
           spendings.
         </Text>
         <Select
+        onChange={(e) => handleselect(e)}
           className={`w-2/3 m-5 self-center`}
           options={[
             { value: "HDFC", label: "HDFC" },
             { value: "SBI", label: "SBI" },
           ]}
         />
-        <Button className={`shadow-md w-20 self-center `} onClick={sync}>Sync</Button>
+      <Text className=' m-3' >OR</Text> 
+
+    <Card>
+    <UploadFile  callback={(data,fileName) => handlecallback(data,fileName) }/>
+
+                
+    </Card>
+        <Button icon={() => {if(sheetPayload.length > 0) {
+         return <DocumentSearchIcon/>
+        }else 
+        {
+          return <GoogleCircleFilled/> 
+        }
+        }} className={`shadow-md w-20  m-5 self-center `} onClick={() => sync()}>Sync</Button>
+
       </div>
     );
   }

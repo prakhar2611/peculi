@@ -41,8 +41,8 @@ export function MonthlyDataChart({ data, setMonth }) {
       <AreaChart
         className="max-w-sm  md:h-72S mt-6"
         data={data}
-        index="month"
-        categories={["amount"]}
+        index="Date"
+        categories={["SBI","HDFC"]}
         colors={["indigo"]}
         yAxisWidth={30}
         onValueChange={(v) => setMonth(v)}
@@ -52,13 +52,17 @@ export function MonthlyDataChart({ data, setMonth }) {
   );
 }
 
-export function VpaDonutChart({ data, onVpaValueChange, index, title }) {
+export function VpaDonutChart({ bank,data, onVpaValueChange, index, title }) {
   // var barchartdata = []
   // data.forEach(element => {
   //     var barChart = { name : element.label, value : element.totalamount}
   //     barchartdata.push(barChart)
   //  });
-
+  var realData = []
+    data.forEach(element => {
+if(element.bank == bank) {
+    realData.push(element)
+}    });
   const valueFormatter = (number) =>
     `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
   const customTooltip = ({ payload, active }) => {
@@ -104,7 +108,7 @@ export function VpaDonutChart({ data, onVpaValueChange, index, title }) {
 
       <DonutChart
         className="mt-6"
-        data={data || []}
+        data={realData || []}
         category="totalamount"
         index={index}
         valueFormatter={valueFormatter}

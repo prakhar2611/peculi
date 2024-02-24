@@ -7,6 +7,7 @@ import { env } from "../../../../../next.config";
 import axios from "axios";
 import { serverurl } from "@/app/util/apiCallers/FetchSyncWorker";
 import Link from 'next/link'
+import { getUserInfo } from "@/app/util/apiCallers/Google";
 
 
 const handler = NextAuth({
@@ -54,6 +55,9 @@ const handler = NextAuth({
       var data = {
                 access_token : token.accessToken,
             }
+
+            var userid = await getUserInfo(session.accessToken)
+            setCookie("user_id" , userid.id, {cookies})
 
         
       axios.post(serverurl+'expense/api/User/v1/Signin', JSON.stringify(data),{

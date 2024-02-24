@@ -32,7 +32,7 @@ import { getCookie, setCookie } from "cookies-next";
 
 export default function FetchByVPA() {
   const [data, setData] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState({ month: "", amount: 0 });
+  const [selectedMonth, setSelectedMonth] = useState({ date: "", bank: "" });
 
   const [vpaData, setVpaData] = useState(null);
   const [slectedVpa, setSelectedVpa] = useState(null);
@@ -72,8 +72,16 @@ const token = getCookie("access_token")
     getMonthlyChartData(token).then(
       (res) => {
         if (res.data != null) {
+        //  obj = {}
+        //   res?.data.forEach((element) => {
+        //    if(element in obj) {
+        //     obj.month = element.month,
+             
+        //    }
+        //   });
+        var singleMonth =  Object.keys(res.data[res.data.length - 1]);
           setData(res.data);
-          setSelectedMonth(res.data[res.data.length - 1]);
+          setSelectedMonth({date : res.data[res.data.length - 1].Date, bank : singleMonth[1]});
         }
       },
       (err) => {
@@ -85,21 +93,21 @@ const token = getCookie("access_token")
   var pData = null
 
   useEffect(() => {
-    if (token!="" && selectedMonth && selectedMonth.month != "") {
+    if (token!="" && selectedMonth ) {
       const availableLabel = [];
-      getVpaChartData(token, selectedMonth.month).then(
+      getVpaChartData(token, selectedMonth.date,selectedMonth.bank).then(
         (res) => {
           setVpaData(res.data);
           setVpaDatafetched(true);
           // setpocketData()
           
-        },
+        },  
         (err) => {
           alert(err);
         }
       );
 
-      getNonLabeledVpaChartData(token, selectedMonth.month).then(
+      getNonLabeledVpaChartData(token, selectedMonth.date,selectedMonth.bank).then(
         (res) => {
           setnonLabeledvpaData(res.data);
           setslectedNonLabledVpa(res.data[0]);
@@ -133,8 +141,9 @@ const token = getCookie("access_token")
   }, [selectedMonth, reloadDonuts]);
 
   function setMonth(data) {
+    console.log("selected testing month data " , data)
     if (data != null) {
-      setSelectedMonth(data);
+      setSelectedMonth({date : data.Date , bank : data.categoryClicked});
     }
     // console.log("on monthly clicked change : ", currentMonth)
   }
@@ -178,9 +187,9 @@ const token = getCookie("access_token")
   
   
   // console.log("Monthly Data chart : ", data);
-  // console.log("VPA Data chart : ", vpaData);
+  console.log("VPA Data chart : ", vpaData);
 
-  // console.log("slected month", selectedMonth);
+  console.log("slected month", selectedMonth);
   // console.log("slected vpa ", slectedVpa);
 
   // console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
@@ -207,6 +216,7 @@ const token = getCookie("access_token")
         )}
         {isVpaDatafetched ? (
           <VpaDonutChart
+          bank = {selectedMonth.bank}
             data={vpaData}
             onVpaValueChange={onVpaValueChange}
             index={"label"}
@@ -237,7 +247,7 @@ const token = getCookie("access_token")
       <div >
         {/* have to call the table for latest transaction for the user in desc time  */}
 
-       <TableRecentTransaction data={recentTransaction} />
+       {/* <TableRecentTransaction data={recentTransaction} /> */}
       </div>
     </div>
   );

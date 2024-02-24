@@ -4,7 +4,8 @@ export async function GET(request, { params }) {
   const slug = params.slug
   const token = request.headers.get("token")
   const { searchParams } = new URL(request.url)
-  var month = ""
+  var date = ""
+  var bank  = ""
   console.log("token in the server " , token )
 
 
@@ -15,14 +16,17 @@ export async function GET(request, { params }) {
         return Response.json({data : response});
         break;
     case 'getvpadata':
-         month = searchParams.get('month')
-        response = await getVpaData(token,month)   
+         date = searchParams.get('date')
+          bank = searchParams.get('bank')
+        response = await getVpaData(token,date,bank)   
         return Response.json({data : response});
         break;
 
     case 'getNonLabeledvpadata':
-         month = searchParams.get('month')
-        response = await getNonLabeledVpaData(token,month)   
+      date = searchParams.get('date')
+         bank = searchParams.get('bank')
+
+        response = await getNonLabeledVpaData(token,date,bank)   
         return Response.json({data : response});
         break;    
     case 'getUniqueVpa':
@@ -31,9 +35,9 @@ export async function GET(request, { params }) {
       break;     
       
     case "getRecentTransaction" : 
-    month = searchParams.get('month')
+    date = searchParams.get('month')
     console.log("Inside get recent trxn")
-      response = await getRecentTransaction(token,month)   
+      response = await getRecentTransaction(token,date)   
       return Response.json({data : response});
       break;     
     default :

@@ -8,29 +8,26 @@ export async function getMonthlyData(token) {
 
   const userid = await getUserInfo(token);
   console.log("userid ", userid);
-
+  //this query will be applicable only for the two banks now for dynamic banks we can use the Pivot cmd 
+  //or add new bank case 
   try {
     const query = `
-        WITH monthly_totals AS (
-            SELECT 
-                DATE_TRUNC('month', e_time) AS truncated_month,
-                TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month, 
-                SUM(amount_debited)::float AS amount 
-            FROM 
-                b64decoded_responses 
-            WHERE 
-                user_id = $1 AND
-                to_account != 'None'
-            GROUP BY 
-                DATE_TRUNC('month', e_time)
-        )
-        SELECT 
-            month, 
-            amount 
-        FROM 
-            monthly_totals 
-        ORDER BY 
-            truncated_month;
+    WITH monthly_totals AS (
+      SELECT
+        DATE_TRUNC('month', e_time) AS truncated_month,
+        TO_CHAR(DATE_TRUNC('month', e_time), 'YYYY-Mon') AS date_str,
+        SUM(CASE WHEN bank = 'SBI' THEN amount_debited ELSE 0 END)::float AS sbi_amount,
+        SUM(CASE WHEN bank = 'HDFC' THEN amount_debited ELSE 0 END)::float AS hdfc_amount
+      FROM b64decoded_responses
+      WHERE user_id = $1 AND to_account != 'None'
+      GROUP BY DATE_TRUNC('month', e_time)
+    )
+    SELECT
+      date_str AS "Date",
+      sbi_amount AS "SBI",
+      hdfc_amount AS "HDFC"
+    FROM monthly_totals
+    ORDER BY truncated_month
         `;
     const params = [userid.id];
 
@@ -45,46 +42,49 @@ export async function getMonthlyData(token) {
   }
 }
 
-export async function getVpaData(token, month) {
+export async function getVpaData(token, month,bank) {
   const client = await pool.connect();
-  console.log("current month data requested for : ", month);
+  console.log("current month data requested for : ", month,bank);
 
   const userid = await getUserInfo(token);
 
   try {
     const query = `
-        WITH cte AS (
-            SELECT
-                to_account AS vpa,
-                SUM(amount_debited):: float AS totalamount,
-                TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month,
-                COUNT(*):: float AS totaltxn,
-                user_id as userId
-            FROM
-                b64decoded_responses
-            GROUP BY
-                to_account,
-                DATE_TRUNC('month', e_time),
-                user_id
-        )
-        SELECT
-            a.vpa,
-            a.totalamount,
-            a.totaltxn,
-            b.label,
-            b.pocket
-        FROM
-            cte a
-            LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
-        WHERE
-            b.label IS NOT NULL
-            AND a.month = $2
-            AND a.userId = $1
-            AND a.vpa != 'None'
-
-        ORDER BY
-            a.totaltxn DESC;
-        `;
+    
+ WITH cte AS (
+  SELECT
+    to_account AS vpa,
+    SUM(amount_debited):: float AS totalamount,
+    TO_CHAR(DATE_TRUNC('month', e_time), 'YYYY-Mon') AS month,
+    COUNT(*):: float AS totaltxn,
+    user_id as userId,
+    bank as bank
+  FROM
+    b64decoded_responses
+  GROUP BY
+    to_account,
+    DATE_TRUNC('month', e_time),
+    user_id,
+    bank
+    
+)
+SELECT
+  a.vpa,
+  a.totalamount,
+  a.totaltxn,
+  b.label,
+  b.pocket,
+  a.bank
+FROM
+  cte a
+LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
+WHERE
+  b.label IS NOT NULL
+  AND a.month = TO_CHAR(TO_DATE($2, 'YYYY-Mon'), 'YYYY-Mon')
+  AND a.userId = $1
+  AND a.vpa != 'None'
+ORDER BY
+  a.totaltxn DESC;`
 
     const params = [userid.id, month];
 
@@ -100,9 +100,8 @@ export async function getVpaData(token, month) {
   }
 }
 
-export async function getNonLabeledVpaData(token, month) {
+export async function getNonLabeledVpaData(token, month,bank) {
   const client = await pool.connect();
-  console.log("current month data requested for : ", month);
 
   const userid = await getUserInfo(token);
 
@@ -112,11 +111,13 @@ export async function getNonLabeledVpaData(token, month) {
             SELECT
                 to_account AS vpa,
                 SUM(amount_debited):: float AS totalamount,
-                TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month,
+                TO_CHAR(DATE_TRUNC('month', e_time), 'YYYY-Mon') AS month,
                 COUNT(*):: float AS totaltxn,
                 user_id as userId
             FROM
                 b64decoded_responses
+                WHERE bank = $3
+
             GROUP BY
                 to_account,
                 DATE_TRUNC('month', e_time),
@@ -132,7 +133,7 @@ export async function getNonLabeledVpaData(token, month) {
             LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
         WHERE
             b.label IS NULL
-            AND a.month = $2
+            AND a.month = TO_CHAR(TO_DATE($2, 'YYYY-Mon'), 'YYYY-Mon')
             AND a.userId = $1
             AND a.vpa != 'None'
 
@@ -140,11 +141,11 @@ export async function getNonLabeledVpaData(token, month) {
             a.totaltxn DESC;
         `;
 
-    const params = [userid.id, month];
+    const params = [userid.id, month,bank];
 
     const res = await client.query(query, params);
     return res.rows; // Returns an array of monthly data
-    console.log("getVpaData data ->", res.rows);
+    console.log("Non label vpa data ->", res.rows);
   } catch (err) {
     console.log(err);
     console.error("error from the db ", err);

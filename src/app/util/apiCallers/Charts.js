@@ -19,10 +19,9 @@ export function getMonthlyChartData(token){
 
 
 
-  export function getVpaChartData(token,currentMonth){
-    console.log("vpa data requested for" ,currentMonth)
+  export function getVpaChartData(token,currentMonth,currentBank){
     
-    return    axios.get(inappserver+`api/chart/getvpadata?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getvpadata?date=${currentMonth}&bank=${currentBank}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token
@@ -34,10 +33,9 @@ export function getMonthlyChartData(token){
 
 } 
 
-export function getNonLabeledVpaChartData(token,currentMonth){
-    console.log("vpa data requested for" ,currentMonth)
+export function getNonLabeledVpaChartData(token,currentMonth,Bank){
     
-    return    axios.get(inappserver+`api/chart/getNonLabeledvpadata?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getNonLabeledvpadata?date=${currentMonth}&bank=${Bank}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token

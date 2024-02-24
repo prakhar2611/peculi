@@ -25,6 +25,24 @@ export function SyncWorker (token,from,to,label)  {
             });
 }   
 
+
+export function SendxlsPayload (token,payload,selectedopt)  {
+
+  console.log("Request payload for Syncing data : ", `/api/v1/SendDataToPostG` )
+  const URL = serverurl+`expense/api/v1/SendDataToPostG?label=${selectedopt}`;
+
+  return axios.post(serverurl+`expense/api/v1/SendDataToPostG?label=${selectedopt}`, JSON.stringify(payload),{
+    headers: {
+        'Content-Type': 'application/json',
+        'token' :  token
+     },
+}).then(response => response.data)
+  .catch(error => {
+    console.error(error);
+    throw error;
+  });     
+}   
+
 export function FetchWorker(from,to,label,callback, errorcallback){
     console.log("Request payload for fetching the data : ", `http://192.168.1.5:9005/expense/api/v1/getExpense?from=${from}&to=${to}&label=${label}` )
 

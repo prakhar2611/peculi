@@ -10,7 +10,7 @@ import {
   Flex,
 } from "@tremor/react";
 import { DonutChart,Button,Icon } from "@tremor/react";
-import { useState } from "react";
+import { useState,useEffect  } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, MailIcon, PaperAirplaneIcon, PlusCircleIcon, ScissorsIcon } from "@heroicons/react/solid";
 
 import {
@@ -36,10 +36,9 @@ import { updateSplitTransaction, UpdateVPAMapping } from "../apiCallers/FetchSyn
 
 export function MonthlyDataChart({ data, setMonth }) {
   return (
-    <Card className="max-w-sm md:max-w-auto">
+    <Card className="max-w-sm md:max-w-full">
       <Title>Monthly Total amount </Title>
       <AreaChart
-        className="max-w-sm  md:h-72S mt-6"
         data={data}
         index="Date"
         categories={["SBI","HDFC"]}
@@ -59,10 +58,15 @@ export function VpaDonutChart({ bank,data, onVpaValueChange, index, title }) {
   //     barchartdata.push(barChart)
   //  });
   var realData = []
-    data.forEach(element => {
-if(element.bank == bank) {
-    realData.push(element)
-}    });
+    if(data != null) {
+      data.forEach(element => {
+        if(element.bank == bank) {
+            realData.push(element)
+        }    });
+    }
+    
+
+   
   const valueFormatter = (number) =>
     `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
   const customTooltip = ({ payload, active }) => {
@@ -333,6 +337,10 @@ export function PocketDataChart({ aggdata }) {
 export function TableRecentTransaction({ data,doReloadDonuts }) {
   const columns = [
     {
+      title: "Duration",
+      dataIndex: "duration",
+    },
+    {
       title: "VPA",
       dataIndex: "vpa",
       render: (text) => <a>{text}</a>,
@@ -341,10 +349,7 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
       title: "Amount",
       dataIndex: "amount",
     },
-    {
-      title: "Duration",
-      dataIndex: "duration",
-    },
+   
     {
       title: "Label",
       dataIndex: "label",
@@ -353,6 +358,11 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
     {
       title: "Pocket",
       dataIndex: "pocket",
+      responsive: ['lg'],
+    },
+    {
+      title: "Bank",
+      dataIndex: "bank",
       responsive: ['lg'],
     },
   ];

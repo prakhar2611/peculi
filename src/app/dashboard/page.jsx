@@ -32,7 +32,7 @@ import { getCookie, setCookie } from "cookies-next";
 
 export default function FetchByVPA() {
   const [data, setData] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState({ date: "", bank: "" });
+  const [selectedMonth, setSelectedMonth] = useState({ date: "", bank: "",totalAmount : 0 });
 
   const [vpaData, setVpaData] = useState(null);
   const [slectedVpa, setSelectedVpa] = useState(null);
@@ -73,15 +73,10 @@ const token = getCookie("access_token")
       (res) => {
         if (res.data != null) {
         //  obj = {}
-        //   res?.data.forEach((element) => {
-        //    if(element in obj) {
-        //     obj.month = element.month,
-             
-        //    }
-        //   });
+        
         var singleMonth =  Object.keys(res.data[res.data.length - 1]);
           setData(res.data);
-          setSelectedMonth({date : res.data[res.data.length - 1].Date, bank : singleMonth[1]});
+          setSelectedMonth({date : res.data[res.data.length - 1].Date, bank : singleMonth[1], totalAmount : res.data[res.data.length - 1].singleMonth[1]});
         }
       },
       (err) => {
@@ -129,7 +124,7 @@ const token = getCookie("access_token")
         }
       );
 
-      getRecentTransactionData(token,selectedMonth.month).then(
+      getRecentTransactionData(token,selectedMonth.date).then(
         (res) => {
           setRecentTransaction(res.data)
         },
@@ -143,6 +138,7 @@ const token = getCookie("access_token")
   function setMonth(data) {
     console.log("selected testing month data " , data)
     if (data != null) {
+      console.log(data)
       setSelectedMonth({date : data.Date , bank : data.categoryClicked});
     }
     // console.log("on monthly clicked change : ", currentMonth)
@@ -192,28 +188,35 @@ const token = getCookie("access_token")
   console.log("slected month", selectedMonth);
   // console.log("slected vpa ", slectedVpa);
 
-  // console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
+  console.log("Non labled VPA Data chart : ", nonLabeledvpaData);
   // console.log("on non labled vpa clicked change : ", slectedNonLabledVpa);
 
   // console.log("Pocket Data : ", pData);
 
   return (
     <div className="flex flex-col gap-6 ">
+            <div className="grid grid-row-1   gap-3 justify-items-center  md:grid-cols-1 ">
+            <MonthlyDataChart data={data} setMonth={setMonth} />
+
+           </div>
+
       <div className="grid grid-row-1 gap-3 justify-items-center  md:grid-cols-3 ">
         {/* <Card className='max-w-md  md:max-w-auto'>
             <Title>Tetsing</Title>
           </Card> */}
 
-        <MonthlyDataChart data={data} setMonth={setMonth} />
-
-        {isVpaDatafetched ? (
+          
+        {/* Not using it currently 
+         {isVpaDatafetched ? (
           <ChartInfo
-            totalAmount={selectedMonth.amount}
+            totalAmount={selectedMonth.totalAmount}
             currentMonth={selectedMonth.month}
           />
         ) : (
           <></>
-        )}
+        )} */}
+
+
         {isVpaDatafetched ? (
           <VpaDonutChart
           bank = {selectedMonth.bank}
@@ -247,7 +250,7 @@ const token = getCookie("access_token")
       <div >
         {/* have to call the table for latest transaction for the user in desc time  */}
 
-       {/* <TableRecentTransaction data={recentTransaction} /> */}
+       <TableRecentTransaction data={recentTransaction} />
       </div>
     </div>
   );

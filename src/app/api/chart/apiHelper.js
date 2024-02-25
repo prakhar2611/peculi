@@ -181,31 +181,40 @@ export async function getUniqueVpa(token) {
 
 export async function getRecentTransaction(token, month) {
   const client = await pool.connect();
-  console.log("current month data requested for : ", month);
 
   const userid = await getUserInfo(token);
 
   try {
     const query = `
-        with cte as (select transaction_id as key, user_id as userid, to_account as vpa,amount_debited as amount,e_time as duration ,TO_CHAR(DATE_TRUNC('month', e_time), 'Mon') AS month from b64decoded_responses) 
-        SELECT
-        a.key,
-            a.vpa,
-            a.amount,
-            a.duration,
-            b.label,
-            b.pocket
-        FROM
-            cte a
-            LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
-        WHERE
-
-            a.month = $2
-            AND a.userid = $1
-            AND a.vpa != 'None'
-
-        ORDER BY
-            a.duration DESC
+    with cte as (
+      select
+          transaction_id as key,
+          user_id as userid,
+          to_account as vpa,
+          amount_debited as amount,
+          bank as bank,
+          e_time as duration,
+          TO_CHAR(DATE_TRUNC('month', e_time), 'YYYY-Mon') AS month
+      from
+          b64decoded_responses
+  )
+SELECT
+  a.key,
+  a.vpa,
+  a.amount,
+  a.duration,
+  a.bank,
+  b.label,
+  b.pocket
+FROM
+  cte a
+  LEFT JOIN vpa_label_pocket_dbos b ON a.vpa = b.vpa
+WHERE
+  a.month = TO_CHAR(TO_DATE($2, 'YYYY-Mon'), 'YYYY-Mon')
+  AND a.userid = $1
+  AND a.vpa != 'None'
+ORDER BY
+  a.duration DESC 
         `;
 
     const params = [userid.id, month];

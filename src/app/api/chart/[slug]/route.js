@@ -35,7 +35,7 @@ export async function GET(request, { params }) {
       break;     
       
     case "getRecentTransaction" : 
-    date = searchParams.get('month')
+    date = searchParams.get('date')
     console.log("Inside get recent trxn")
       response = await getRecentTransaction(token,date)   
       return Response.json({data : response});

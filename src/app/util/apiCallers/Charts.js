@@ -63,7 +63,7 @@ export function getUniqueVpaData(token){
 
 export function getRecentTransactionData(token,currentMonth){
     
-    return    axios.get(inappserver+`api/chart/getRecentTransaction?month=${currentMonth}`,{
+    return    axios.get(inappserver+`api/chart/getRecentTransaction?date=${currentMonth}`,{
          headers: {           
              'Content-Type': 'application/json',
              'token' :  token

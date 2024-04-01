@@ -159,8 +159,10 @@ import { Flex } from '@tremor/react';
           if (isfetched == false) {
             return null
           }
+          console.log("Available label : ", labels);
+
           return (
-        <Flex className=' max-w-sm flex flex-col scroll-m-0 overflow-scroll '>
+        <Flex className=' max-w-lg flex flex-col scroll-m-0 overflow-scroll gap-3 '>
             <Table size="small" columns={columns} 
             pagination ={false}
             dataSource={data} rowKey={record => record.key}/>

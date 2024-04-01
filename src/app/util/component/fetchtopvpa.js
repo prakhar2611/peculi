@@ -25,7 +25,7 @@ export default function FetchByVPA ({token}){
 
   
   useEffect( () => {
-    FetchGroupedVPA(limit,offset).then((res) => {
+    FetchGroupedVPA(limit,offset,"CONFIGURE").then((res) => {
         console.log("reposne data " , res)
         setdata(res)
       },(err) => {

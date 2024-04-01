@@ -452,7 +452,7 @@ export function TableRecentTransaction({ data,doReloadDonuts }) {
  
 
   return (
-    <Card className="max-w-max  md:min-w-[180vh] md:place-content-stretch">
+    <Card className="max-w-max  md:min-w-full md:place-content-stretch">
       <div className="flex gap-6">
         <Title>Recent Transactions</Title>
         <Popover

@@ -74,3 +74,44 @@ export function getRecentTransactionData(token,currentMonth){
          .catch(error => console.error(error));
 
 } 
+
+
+export function getDataSchema(){
+    
+    return    axios.get(inappserver+`api/chart/getDataSchema`,{
+         headers: {           
+             'Content-Type': 'application/json',
+         },        
+     })
+     .then(response => response.data
+     )
+         .catch(error => console.error(error));
+
+} 
+
+
+export function getTableData(tableName){
+    
+    return    axios.get(inappserver+`api/chart/getTableData?table=${tableName}`,{
+         headers: {           
+             'Content-Type': 'application/json',
+         },        
+     })
+     .then(response => response.data
+     )
+         .catch(error => console.error(error));
+
+} 
+
+export function getQueryData(query){
+    
+    return    axios.get(inappserver+`api/chart/getQueryData?query=${query}`,{
+         headers: {           
+             'Content-Type': 'application/json',
+         },        
+     })
+     .then(response => response.data
+     )
+         .catch(error => console.error(error));
+
+} 

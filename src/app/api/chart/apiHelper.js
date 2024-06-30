@@ -230,3 +230,55 @@ ORDER BY
     client.release(); // Make sure to release the client back to the pool
   }
 }
+
+
+
+export async function listSchemas() {
+  const client = await pool.connect();
+
+  try {
+        const result = await client.query(`
+          SELECT table_name
+          FROM information_schema.tables
+          WHERE table_schema = 'public';
+        `);
+        return result.rows.map(row => row.table_name);
+      } catch (error) {
+        console.error('Error fetching tables:', error);
+        return [];
+      }
+}
+
+export async function getTableData( tableName) {
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      `
+      SELECT column_name, data_type
+      FROM information_schema.columns
+      WHERE table_name = $1;
+    `,
+      [tableName]
+    );
+    client.release();
+    return result.rows; 
+  } catch (error) {
+    console.error("Error fetching table schema:", error);
+    throw error; // Or handle the error as needed
+  }
+}
+
+
+export async function getQueryData( query) {
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+     query
+    );
+    client.release();
+    return result.rows; 
+  } catch (error) {
+    console.error("Error fetching table schema:", error);
+    throw error; // Or handle the error as needed
+  }
+}

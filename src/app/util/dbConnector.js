@@ -17,3 +17,4 @@ const pool = new Pool(poolConfig);
 
 // Export the pool to use it elsewhere in your application
 module.exports = pool;
+

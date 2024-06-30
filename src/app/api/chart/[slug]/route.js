@@ -1,4 +1,4 @@
-import { getMonthlyData, getNonLabeledVpaData, getRecentTransaction, getUniqueVpa, getVpaData } from "../apiHelper";
+import {getTableData, getMonthlyData, getNonLabeledVpaData, getRecentTransaction, getUniqueVpa, getVpaData, listSchemas, getQueryData } from "../apiHelper";
 export async function GET(request, { params }) {
 
   const slug = params.slug
@@ -6,6 +6,7 @@ export async function GET(request, { params }) {
   const { searchParams } = new URL(request.url)
   var date = ""
   var bank  = ""
+  var table = ""
   console.log("token in the server " , token )
 
 
@@ -40,6 +41,17 @@ export async function GET(request, { params }) {
       response = await getRecentTransaction(token,date)   
       return Response.json({data : response});
       break;     
+    case "getDataSchema" :
+      response = await listSchemas()
+      return Response.json(response)
+    case "getTableData" :
+        table = searchParams.get('table')
+        response = await getTableData(table)
+        return Response.json(response)
+    case "getQueryData" :
+      table = searchParams.get('query')
+      response = await getQueryData(table)
+      return Response.json(response)
     default :
     return Response.json({ error: 'Endpoint not found' });
 
